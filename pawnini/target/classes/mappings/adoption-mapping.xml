@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="AdoptionDAO">
+
+	<!-- ResultSet 과 같은 역활 -->
+	<resultMap id="adoptionResult" type="adoption" >
+		<id property="adoption_id" column="ADOPTION_ID" />
+		<result property="adoption_name" column="ADOPTION_NAME" />
+		<result property="adoption_title" column="ADOPTION_TITLE" />
+		<result property="adoption_content" column="ADOPTION_CONTENT" />
+		<result property="adoption_f_image" column="ADOPTION_F_IMAGE" />
+		<result property="adoption_date" column="ADOPTION_DATE" />
+		<result property="member_id" column="MEMBER_ID" />
+		<result property="paws_id" column="PAWS_ID" />
+	</resultMap>
+	
+	<!-- 글 입력 -->
+	<insert id="insertAdoption" parameterType="adoption">
+	<![CDATA[
+		INSERT INTO ADOPTION
+		(
+		ADOPTION_ID,
+		ADOPTION_NAME,
+		ADOPTION_TITLE,
+		ADOPTION_CONTENT,
+		ADOPTION_F_IMAGE,
+		MEMBER_ID,
+		PAWS_ID
+		)
+		VALUES(
+		(SELECT NVL(MAX(ADOPTION_ID),0)+1 FROM ADOPTION),
+		#{adoption_name},
+		#{adoption_title},
+		#{adoption_content},
+		#{adoption_f_image},
+		'Lany10',
+		1234
+		)
+	]]>		
+	</insert>
+	
+	<!--정보 수정 -->
+	<update id="updateAdoption">
+		<![CDATA[
+		UPDATE ADOPTION SET
+			ADOPTION_TITLE=#{adoption_title},
+			ADOPTION_CONTENT=#{adoption_content}
+		WHERE ADOPTION_ID=#{adoption_id}
+		]]>
+	</update>
+	
+	<!-- 정보 삭제 -->	
+	<delete id="deleteAdoption">
+		<![CDATA[
+		DELETE ADOPTION
+		WHERE
+		ADOPTION_ID=#{adoption_id}
+		]]>
+	</delete>
+	
+	<!-- 정보 상세 보기 -->
+	<select id="getAdoption" resultType="adoption">
+	<!-- SQL 고쳐야함!!! HELLLLLLLLLLLLLLLLLO -->
+		<![CDATA[
+		SELECT * 
+		FROM ADOPTION
+		WHERE
+		ADOPTION_ID= #{adoption_id}
+		]]>
+	</select>
+	
+	<!-- 등록 리스트 불러오기 -->
+	<!-- SQL 고쳐야함!!! HELLOOOOOOOOOOOOOOOOOOOOOOO-->
+	<select id="getAdoptionList" resultMap="adoptionResult">
+		SELECT *
+		FROM ADOPTION
+		ORDER BY ADOPTION_ID DESC
+	</select>
+</mapper>

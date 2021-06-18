@@ -1,0 +1,27 @@
+@charset "UTF-8";
+section#content {width: 70%; margin: 20px auto; }
+ section#content ul li { margin:10px 0; }
+ section#content ul li img { width:250px; height:250px; }
+ section#content ul li::after { content:""; display:block; clear:both; }
+ section#content div.thumb { float:left; width:250px; }
+ section#content div.gdsInfo { float:right; width:calc(100% - 270px); }
+ section#content div.gdsInfo { font-size:20px; line-height:2; }
+ section#content div.gdsInfo span { display:inline-block; width:100px; font-weight:bold; margin-right:10px; }
+ section#content div.gdsInfo .delete { text-align:right; }
+ section#content div.gdsInfo .delete button { font-size:22px;
+            padding:5px 10px; border:1px solid #eee; background:#eee;}
+ .allCheck { float:left; width:200px; }
+.allCheck input { width:16px; height:16px; }
+.allCheck label { margin-left:10px; }
+.delBtn { float:right; width:300px; text-align:right; }
+.delBtn button { font-size:18px; padding:5px 10px; border:1px solid #eee; background:#eee;}
+
+.checkBox { float:left; width:30px; }
+.checkBox input { width:16px; height:16px; }
+
+.listResult { padding:20px; background:#eee; margin-top: 30px; text-align: right;}
+.listResult .sum { float:left; width:45%; font-size:22px; margin-bottom: 10px;}
+
+.listResult .orderInfo { float:right; width:45%; text-align:right; }
+.listResult .orderInfo button { font-size:18px; padding:5px 10px; border:1px solid #999; background:#fff;}
+.listResult::after { content:""; display:block; clear:both; }
