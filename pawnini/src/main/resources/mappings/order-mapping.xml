@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="OrderDAO">
+	
+	<!-- 주문 정보 삽입 -->
+	<insert id="insertOrder" parameterType="order">
+	<![CDATA[
+		 INSERT INTO ORD (ORD_ID, RECIPIENT_NAME, ORD_POSTCODE, ORD_F_ADDR, ORD_S_ADDR, ORD_PHONE, ORD_TOTAL MEMBER_ID)
+			VALUES (
+                #{ord_id},
+                #{recipient_name},
+                #{ord_postcode},
+                #{ord_f_addr},
+                #{ord_s_addr},
+                #{ord_phone},
+                #{ord_total},
+                #{member_id}
+                )
+	]]>
+	</insert>
+	
+	<!-- 상세 주문 삽입 -->
+	<insert id="insertOrderDetails" parameterType="orderDetails">
+	<![CDATA[
+		 INSERT INTO ORD_DETAILS (ORD_D_ID, ORD_ID, PRODUCT_ID, CART_AMOUNT)
+                SELECT ORD_D_SEQ.NEXTVAL, #{ord_id}, PRODUCT_ID, CART_AMOUNT
+                FROM CART
+	]]>
+	</insert>
+	
+	<!-- 특정 회원의 주문 목록 -->
+	<select id="getOrderList" resultType="order">
+			SELECT *
+			FROM ORD
+			WHERE MEMBER_ID = #{member_id}
+	</select>
+	
+	<!-- 상세 주문 보기 -->
+	<select id="getOrderDetails" resultType="orderList">
+		SELECT O.ORD_ID, O.MEMBER_ID, O.RECIPIENT_NAME, O.ORD_POSTCODE, O.ORD_F_ADDR, O.ORD_S_ADDR, O.ORD_PHONE, O.ORD_DATE, O.ORD_TOTAL,
+                D.ORD_D_ID, D.PRODUCT_ID, D.CART_AMOUNT,
+                P.PRODUCT_NAME, P.PRODUCT_THUMB_IMG, P.PRODUCT_PRICE
+		FROM ORD O
+            INNER JOIN ORD_DETAILS D ON O.ORD_ID = D.ORD_ID
+            INNER JOIN PRODUCT P ON P.PRODUCT_ID = D.PRODUCT_ID
+		WHERE O.MEMBER_ID = #{member_id} AND O.ORD_ID = #{ord_id}
+	</select>
+	
+	<!-- 관리자:전체 주문 불러오기 -->
+	<select id="getAllOrders" resultType="order">
+		SELECT * FROM ORD
+	</select>
+	
+	<!-- 관리자:특정 주문 불러오기 -->
+	<select id="getOrder" resultType="orderList">
+		SELECT O.ORD_ID, O.MEMBER_ID, O.RECIPIENT_NAME, O.ORD_POSTCODE, O.ORD_F_ADDR, O.ORD_S_ADDR, O.ORD_PHONE, O.ORD_DATE, O.ORD_TOTAL,
+	                D.ORD_D_ID, D.PRODUCT_ID, D.CART_AMOUNT,
+	                P.PRODUCT_NAME, P.PRODUCT_THUMB_IMG, P.PRODUCT_PRICE
+	    FROM ORD O
+	                INNER JOIN ORD_DETAILS D ON O.ORD_ID = D.ORD_ID
+	                INNER JOIN PRODUCT P ON D.PRODUCT_ID = P.PRODUCT_ID
+	    WHERE O.ORD_ID = #{ord_id}
+	</select>
+	
+	<!-- 카트 추가 -->
+	<insert id="addToCart" parameterType="cart">
+	<![CDATA[
+		 INSERT INTO CART(CART_ID, CART_AMOUNT, PRODUCT_ID, MEMBER_ID)  
+		 VALUES(
+		 		CONCAT(TO_NUMBER(TO_CHAR(SYSDATE, 'YYMMDD')), LPAD(CART_SEQ.NEXTVAL, 2, 0)),
+		 		#{cart_amount},
+		 		#{product_id},
+		 		#{member_id}
+		 		)
+	]]>
+	</insert>
+	
+	<!-- 카트 목록 -->
+	<select id="getCartList" resultType="cart">
+		SELECT C.CART_ID, C.MEMBER_ID, P.PRODUCT_ID, M.MEMBER_ID, P.PRODUCT_NAME, P.PRODUCT_THUMB_IMG, C.CART_AMOUNT, P.PRODUCT_PRICE,
+                (PRODUCT_PRICE * CART_AMOUNT) CART_TOTAL
+		FROM MEMBER M, PRODUCT P, CART C
+		WHERE M.MEMBER_ID = C.MEMBER_ID AND P.PRODUCT_ID = C.PRODUCT_ID AND C.MEMBER_ID = #{member_id}
+		ORDER BY C.CART_ID
+	</select>
+	
+	<!-- 카트 목록 삭제 -->
+	<delete id="deleteCartByMember">
+	<![CDATA[
+		DELETE CART
+		WHERE MEMBER_ID = #{member_id}
+	]]>
+	</delete>
+	
+	<!-- 카트 ID 삭제 -->
+	<delete id="deleteCartId">
+	<![CDATA[
+		DELETE CART
+		WHERE CART_ID = #{cart_id}
+	]]>
+	</delete>
+	
+	<!-- 카트 최종 주문 금액 구하기 -->
+	<select id="getSum" resultType="int">
+		SELECT NVL(SUM(PRODUCT_PRICE * CART_AMOUNT), 0) CART_TOTAL
+		FROM CART C, PRODUCT P
+		WHERE C.PRODUCT_ID = P.PRODUCT_ID AND C.MEMBER_ID = #{member_id}
+	</select>
+	
+	<!-- 카트 제품 수량 수정 -->
+	<update id="modifyCart" parameterType="cart">
+	<![CDATA[
+		UPDATE CART
+        SET CART_AMOUNT = #{cart_amount}
+    	WHERE MEMBER_ID = #{member_id} AND PRODUCT_ID = #{product_id}
+    ]]>
+   	</update>
+   	
+   	<!-- 카트 내 중복 제품 체크  -->
+   	<select id="countCart" resultType="int">
+   		SELECT COUNT(*) 
+   		FROM CART 
+   		WHERE MEMBER_ID = #{member_id} AND PRODUCT_ID = #{product_id}
+   	</select>
+   	
+   	<!-- 카트 내 중복 제품이 있을 경우 해당 수량 합치기 -->
+   	<update id="checkOverlap">
+   	<![CDATA[
+   		UPDATE CART
+        SET CART_AMOUNT = CART_AMOUNT + #{cart_amount}
+    	WHERE MEMBER_ID = #{member_id} AND PRODUCT_ID = #{product_id}
+   	]]>
+   	</update>
+	
+</mapper>

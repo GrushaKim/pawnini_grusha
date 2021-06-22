@@ -1,336 +1,198 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<style>
+.orderInfo { border:5px solid #eee; padding:20px; }
+.orderInfo .inputArea { margin:10px 0; }
+.orderInfo .inputArea label { display:inline-block; width:120px; margin-right:10px; }
+.orderInfo .inputArea input { font-size:14px; padding:5px; }
+#userAddr2, #userAddr3 { width:250px; }
+
+.orderInfo .inputArea:last-child { margin-top:30px; }
+.orderInfo .inputArea button { font-size:20px; border:2px solid #ccc; padding:5px 10px; background:#fff; margin-right:20px;}
+</style>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+function execPostCode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+           var fullRoadAddr = data.roadAddress; 
+           var extraRoadAddr = '';
+           
+           if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+        	   extraRoadAddr += data.bname;
+           }
+           if(data.buildingName !== '' && data.apartment === 'Y'){
+        	   extraRoadAddr += (extraRoadAddr !== '' ? ', ' + data.buildingName : data.bulidingName);
+           }
+           if(extraRoadAddr !== ''){
+        	   extraRoadAddr = ' (' + extraRoadAddr + ')';
+           }
+           if(fullRoadAddr !== ''){
+        	   fullRoadAddr += extraRoadAddr;
+           }
+           
+           console.log(data.zonecode);
+           console.log(fullRoadAddr);
+           
+           $("[name=ord_postcode]").val(data.zonecode);
+           $("[name=ord_f_addr]").val(fullRoadAddr);
+        }
+    }).open();
+}
+
+function orderCancel(){
+	window.history.back();
+}
+function showSelect(ord_payment){
+	if(ord_payment == '무통장입금'){
+		$('#bank').show();
+		$('#card').hide();
+		$('#ord_bank').prop("disabled", false);
+		$('#ord_card').prop("disabled", true);
+	}else if(ord_payment =='카드결제'){
+		$('#bank').hide();
+		$('#card').show();
+		$('#ord_bank').prop("disabled", true);
+		$('#ord_card').prop("disabled", false);
+	}
+}
+</script>
 </head>
+<%@ include file="../include/Header.jsp"%>
 <body>
-		 
-<div class="col-lg-8">
 
-	<div class="row" id="titleDiv">
-		<div class="col">
-	 		<h3>상품 주문서</h3>		
-	 	</div>
-	</div>
-	<input type="hidden" id="directOrder" value="${directOrder}"/>
-	<hr class="sub-hr" noshade/>
-	<div class="form-row align-items-center">
-		<div class="col" align="center">
-	 		<h5 style="text-decoration:underline; text-undeline-position: under;">주문 목록</h5>		
-	 	</div>	
-	</div>
-	<hr  class="sub-secondary-hr" noshade/>
-	
-	<div class="form-row align-items-center">
-		<div class="col-1" align="center">#</div>
-		<div class="col-2" align="center">상품이미지</div>
-		<div class="col-2" align="center">상품명</div>					
-		<div class="col-2" align="center">판매단가</div>
-		<div class="col-2" align="center">수량</div>
-		<div class="col-3" align="center">합계</div>													
-	</div>
-	
-	<form id="cartListForm"></form>
+
+<section id="content">
+  
+<br><br><br>
+	<table border="1">
+			<tr>
+				<th></th>
+				<th>상품명</th>
+				<th>판매가</th>
+				<th>수량</th>
+				<th>합계</th>
+			<c:forEach var="row" items="${map.cartList}" varStatus="i">
+			<tr>
+				<td> <img style="width:100px; height: 150px;" src="${row.product_thumb_img}" />
+				<td>
+					${row.product_name}
+				<td style="width: 80px" align="right">
+					<fmt:formatNumber pattern="###,###,###" value="${row.product_price}" />
+				<td>
+					<input type="number" id="cart_amount" style="width:40px" name="cart_amount" value="${row.cart_amount}" />
+					<input type="hidden" id="product_id" name="product_id" value="${row.product_id}" />
+					<input type="hidden" id="cart_id" name="cart_id" value="${row.cart_id}" />
+					<input type="hidden" id="member_id" name="member_id" value="${member.member_id}" />
+				<td style="width:100px" align="right">
+				<!-- 아이템당 수량 *가격  = cart_total-->
+					<fmt:formatNumber pattern="###,###,###" value="${row.cart_total}" />
+			</c:forEach>
 				
-	<hr  class="sub-secondary-hr" noshade/>
-
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label style="padding-right:20px; padding-top:-5px;"><strong>상품 합계</strong></label>			
-		</div>
-		<div class="form-group col-6"></div>	
-		<div class="form-group col-3" align="center" id="productTotalDiv"></div>	
-	</div>
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label style="padding-right:20px; padding-top:-5px;"><strong>배송료</strong></label>			
-		</div>
-		<div class="form-group col-6"></div>
-		<div class="form-group col-3" align="center" id="deliveryFeeDiv"></div>	
-	</div>		
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label style="padding-right:20px; padding-top:-5px;"><strong>총 합계</strong></label>			
-		</div>
-		<div class="form-group col-6"></div>
-		<div class="form-group col-3" align="center" id="subTotalDiv"></div>
-	</div>
-	
-	<hr class="sub-hr" noshade/>
-	
-	<div class="form-row align-items-center">
-		<div class="col" align="center">
-		 	<h5 style="text-decoration:underline;text-undeline-position: under;">주문자 기본정보</h5>		
-		 </div>	
-	</div>	
+		</table>
 		
-	<hr  class="sub-secondary-hr" noshade/>		
-		
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label for="delivery" style="padding-right:20px; padding-top:-5px;"><strong>배송지 선택</strong></label>			
-		</div>
-		<div class="form-group col-2" align="center">
-			<input class="form-check-input" type="radio" name="pesonalInfo" id="originalP" value="originalP" checked>
-			<label class="form-check-label" for="originalP">기존</label>
-		</div>
-		<div class="form-group col-2"align="center">
-			<input class="form-check-input" type="radio" name="pesonalInfo" id="newP" value="newP">
-			<label class="form-check-label" for="newP">신규</label>
-		</div>
-	</div>		
-		
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label for="address1" style="padding-right:20px; padding-top:-5px;"><strong>주문자명</strong></label> 
-		</div>
-		<div class="form-group col-3">
-			<input type="text" class="form-control-plaintext inline-form" id="order_name" value="" placeholder="주문하신 분의 이름 입력"> 
-		</div>
-		<div class="form-group col-3" align="center">
-			<label for="address1" style="padding-right:20px; padding-top:-5px;"><strong>수령자명</strong></label> 
-		</div>
-		<div class="form-group col-3">
-			<input type="text" class="form-control-plaintext inline-form" id="order_receiver" value="" placeholder="받으실 분의 이름 입력"> 
-		</div>
-	</div>		
-
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label for="order_tel" style="padding-right:20px; padding-top:-5px;"><strong>주문자 연락처</strong></label> 
-		</div>		    
-		<div class="form-group col-3" align="center">
-			<input type="text" class="form-control-plaintext inline-form" id="order_tel" value="" placeholder="ex>010-1234-5678">
-		</div>
-		<div class="form-group col-3" align="center">
-			<label for="order_email" style="padding-right:20px; padding-top:-5px;"><strong>주문자 이메일</strong></label> 
-		</div>
-		<div class="form-group col-3">
-			<input type="email" class="form-control-plaintext inline-form" id="order_email" value="" placeholder="order@naver.com"> 
-		</div>
-	</div>
-	<br><br>
-	<div class="form-row align-items-center">
-		<div class="form-group col" align="center">
-			<h5 style="color:red;font-weight:bold">[주의 바랍니다]</h5>
-			<p>주문자님께서는 자신의 메일과 연락번호를 정확하게 확인 바랍니다.</p>
-			<p>주문시의 연락처가 올바르지 않았거나 주문확인서가 정확하게 전달되지 않은 경우에는 고객센터에 직접 문의하시기 바랍니다.</p>
-		</div>	    
-	</div>	
-			
-	<hr class="sub-hr" noshade/>
-	
-	
-	<div class="form-row align-items-center">
-		<div class="col" align="center">
-	 		<h5 style="text-decoration:underline;text-undeline-position: under;">배송지</h5>		
-	 	</div>	
-	</div>
-	
-	<hr  class="sub-secondary-hr" noshade/>
-	
-
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label for="delivery" style="padding-right:20px; padding-top:-5px;"><strong>배송지 선택</strong></label>			
-		</div>
-		<div class="form-group col-2" align="center">
-			<input class="form-check-input" type="radio" name="delivery" id="original" value="original" checked>
-			<label class="form-check-label" for="original">기존</label>
-		</div>
-		<div class="form-group col-2"align="center">
-			<input class="form-check-input" type="radio" name="delivery" id="new" value="new">
-			<label class="form-check-label" for="new">신규</label>
-		</div>
-	</div>
-	<div class="form-row align-items-center">
-		<div class="form-group col">
+		<!-- 주문 정보 입력 -->
 				
-	 	 	<div class="form-row" id="address1">
-				<div class="form-group col-3" align="center">
-			    	<label for="address1" style="padding-right:20px; padding-top:-5px;"><strong>우편 번호</strong></label> 
-			    </div>
-			    <div class="form-group col-3">
-					<input type="text" readonly class="form-control-plaintext inline-form" name="zipcode" id="zipcode" value=""> 
-			    </div>
-				<div class="form-group col-1"></div>			    
-			    <div class="form-group col-3" align="center">
-					<input type="button" class="btn btn-outline-dark" value="우편번호 검색" id="checkPost" onclick="sample3_execDaumPostcode()">
-			    </div>
-			    <div class="form-group col-2"></div>
-			</div>	
+ <form role="form" method="post" autocomplete="off" action="insertOrder.do">
+<div class="orderInfo">
+  <div class="inputArea">
+   <label for="">수령인</label>
+   <input type="text" name="recipient_name" id="orderRec" required />
+  </div>
+  
+  <div class="inputArea">
+   <label for="orderPhone">연락처</label>
+   <input type="text" name="ord_phone" id="orderPhone" placeholder="010-xxxx-xxxx" required />
+  </div>
+  
+  <div class="inputArea">
+   <label for="userAddr1">우편번호</label>
+   <input type="text" name="ord_postcode" id="userAddr1" required="required" readonly />
+   <button type="button" class="btn btn-default" onclick="execPostCode();"><i class="fa fa-search"></i>우편번호 찾기</button>
+  </div>
+  
+  <div class="inputArea">
+   <label for="userAddr2">도로명 주소</label>
+   <input type="text" name="ord_f_addr" id="userAddr2" required="required" readonly />
+  </div>
+  
+  <div class="inputArea">
+   <label for="userAddr3">상세 주소</label>
+   <input type="text" name="ord_s_addr" id="userAddr3" required="required" />
+  </div>
 
-	 	 	<div class="form-row" id="address2a">
-				<div class="form-group col-3" align="center">
-			    	<label for="address2" style="padding-right:20px; padding-top:-5px;"><strong>상세 주소</strong></label>	 
-			    </div>
-			    <div class="form-group col-4">
-					<input type="text" readonly class="form-control-plaintext inline-form" name="addr1" id="addr1" value=""> 
-			    </div>
-				<div class="form-group col-3">
-					<input type="text" readonly class="form-control-plaintext inline-form" name="extra" id="extra" value="">		
-				</div>
-				<div class="form-group col-2"></div>			    
-			</div>
-  		
-  			<div class="form-row" id="address2b">
-				<div class="form-group col-3"></div>			
-				<div class="form-group col-7">
-					<input type="text" class="form-control-plaintext inline-form" name="addr2" id="addr2" value="">
-			    </div>
-				<div class="form-group col-2"></div>			    
-			</div>			
-  				
-		   	<div class="form-row" id="wrap">
-		   		<div class="form-group col-3"></div>
-		   		<div class="form-group col-7">
-		  			<img src="//t1.daumcdn.net/postcode/resource/images/close.png" id="btnFoldWrap" onclick="foldDaumPostcode()" alt="접기 버튼">
-		  		</div>
-		  		<div class="form-group col-2"></div>
-		  	</div> 	
-  	 
+  <div class="inputArea">
+   <label for="reqMessage">요청사항</label>
+   <input type="text" name="reqMessage" id="reqMessage" />
+  </div>
+  </div>
+  <hr>
+  
+  <!-- 결제정보  -->
+  	<div class="orderInfo">
+  		<div class="inputArea">
+ 	<fmt:formatNumber pattern="###,###,###" value="${map.sumTotal}" /> 원 + 
+		${map.shippingFee} 원 (5만원 이상 배송비 무료) = 
+	결제금액: <fmt:formatNumber pattern="###,###,###" value="${map.finalSum}" /> 원
+  	<br>
+  		</div>
+  		<div class="inputArea">
+  		<b>적립금 </b> : 
+  		<input name="usedMileage" id="usedMileage" type="text" value="0" size="10" 
+  				oninput="chkMileage(this, '${member.member_mileage}')"/>원 
+  		&nbsp;(가용 적립금 : <span style="color:scarlet; font-weight:bold">${member.member_mileage} 원</span>
+  		<input type="checkbox" onclick="useAllMileage('ㅁ')">전부 사용하기)
+  		<input type="button" value="사용하기" onclick="">
+  		<p>적립금은 1,000원 이상일 경우 결제에 사용할 수 있습니다.</p>
+  		</div>
+  	</div>
+  	<br>
+  	<div class="orderInfo">
+  		<div class="inputArea">
+   			<label for="ord_payment">결제수단</label>
+   			<input type="radio" name="ord_payment" id="ord_payment" value="무통장입금" onclick="showSelect(this.value)" checked />카드결제
+   			<input type="radio" name="ord_payment" id="ord_payment" value="카드결제" onclick="showSelect(this.value)"  />무통장입금
+   			<input type="radio" name="ord_payment" id="ord_payment" value="카카오페이" />카카오페이
+   			<input type="radio" name="ord_payment" id="ord_payment" value="페이코" />PAYCO
+   		</div>
+   		<div class="inputArea">
+   				<span id="bank">
+   				<select name="ord_bank" id="ord_bank">
+   					<option value="1">카카오뱅크</option>
+   					<option value="2">미래은행</option>
+   					<option value="3">우리은행</option>
+   				</select>
+   				</span>
+   		</div>
+   		<div class="inputArea">
+   				<span id="card">
+   				<select name="ord_card" id="ord_card">
+   					<option value="1">미래카드</option>
+   					<option value="2">삼성카드</option>
+   					<option value="3">현대카드</option>
+   				</select>
+   				</span>
+   				<span id="card_info">
+   				<input type="text" name="card_info" size="20" />
+   				</span>
+   		</div>
+   		
+  	</div>
+  
+   <button type="submit" class="orderBtn">주문</button>
+   <button type="button" class="orderCancelBtn" onclick="orderCancel();">취소</button>
+  
+  
+ </form> 
 
-		</div>			  	
-	</div>
-	<hr  class="sub-secondary-hr" noshade/>	
-	
-	<hr class="sub-hr" noshade/>
-
-	<div class="form-row align-items-center">
-		<div class="col" align="center">
-	 		<h5 style="text-decoration:underline;text-undeline-position: under;">쿠폰 및 포인트 사용</h5>		
-	 	</div>	
-	</div>
-
-	<hr  class="sub-secondary-hr" noshade/>	
-	
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label style="padding-right:20px; padding-top:-5px;"><strong>총 할인가능액</strong></label>			
-		</div>
-		<div class="form-group col-6"></div>				
-		<div class="form-group col-3" align="center" id="discoutableTotal"></div>			
-	</div>
-	
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label for="useBenefit" style="padding-right:20px; padding-top:-5px;"><strong>사용 여부</strong></label>			
-		</div>
-		<div class="form-group col-2" align="center">
-			<input class="form-check-input" type="radio" name="useBenefit" id="yes" value="yes" checked>
-			<label class="form-check-label" for="original">사용함</label>
-		</div>
-		<div class="form-group col-2"align="center">
-			<input class="form-check-input" type="radio" name="useBenefit" id="no" value="no">
-			<label class="form-check-label" for="new">사용안함</label>
-		</div>
-	</div>
-
-	
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label style="padding-right:20px; padding-top:-5px;"><strong>포인트</strong></label>			
-		</div>
-		<div class="form-group col-3" align="center">			
-			<input type="number" class="form-control-plaintext inline-form" id="point" value=""/> 		
-		</div>
-		<div class="form-group col-1" align="center">(점)</div>
-		<div class="form-group col-1"></div>		
-		<div class="form-group col-4">* 보유 포인트 : <font id="member_point"></font> (점)</div>
-								
-	</div>
-
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label style="padding-right:20px; padding-top:-5px;"><strong>쿠폰</strong></label>			
-		</div>	
-		<div class="form-group col-5" align="center">			
-			<select id="coupon_no" class="form-control-plaintext"  style="border-bottom:1px solid;" >
-				<option value="">[지급 쿠폰 선택]</option>   
-			</select>				
-		</div>			
-		<div class="form-group col-4" id="couponDiv"></div>	
-	</div>	
-
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label style="padding-right:20px; padding-top:-5px;"><strong>총 할인액</strong></label>			
-		</div>
-		<div class="form-group col-6" id="couponWarningDiv"></div>				
-		<div class="form-group col-3" align="center" id="discountTotal"></div>			
-	</div>
-	
-	<hr class="sub-hr" noshade/>
-	
-	<div class="form-row align-items-center">
-		<div class="col" align="center">
-	 		<h5 style="text-decoration:underline;text-undeline-position: under;">결제 방법</h5>		
-	 	</div>	
-	</div>
-	
-	<hr  class="sub-secondary-hr" noshade/>
-	
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label style="padding-right:20px; padding-top:-5px;"><strong>결제하실 금액</strong></label>			
-		</div>
-		<div class="form-group col-6"></div>				
-		<div class="form-group col-3" align="center" id="finalTotal"></div>				
-	</div>
-
-	<div class="form-row align-items-center">
-		<div class="form-group col-3" align="center">
-			<label for="payment" style="padding-right:20px; padding-top:-5px;"><strong>결제수단 선택</strong></label>		
-		</div>
-		<div class="form-group col-3" align="center">
-			<input class="form-check-input" type="radio" name="payment" id="card" value="1" checked>
-			<label class="form-check-label" for="card">카드결제</label>
-		</div>
-		<div class="form-group col-3" align="center">
-			<input class="form-check-input" type="radio" name="payment" id="bank" value="2">
-			<label class="form-check-l3abel" for="bank">무통장결제</label>
-		</div>
-		<div class="form-group col-3" align="center">
-			<input class="form-check-input" type="radio" name="payment" id="etc" value="3" disabled>
-			<label class="form-check-label" for="etc">기타</label>
-		</div>		
-	</div>
-
-	<hr  class="sub-secondary-hr" noshade/>	
-	
-	<div class="form-row align-items-center" id="cardDiv">
-		<div class="col" align="center">
-			<h5 style="color:red;font-weight:bold;">[이 쇼핑몰은 상용이 아니므로 결제 API가 도입되지 않았습니다]</h5><br>
-			<p>*진행을 위해서 아래 부분을 체크해주세요.</p><br>
-			<input class="form-check-input" type="checkbox" id="cardPaid" value="1">
-			<label class="form-check-label" for="cardPaid">[카드결제]를 선택하였습니다</label>
-		</div>
-	</div>		
-
-	<div class="form-row align-items-center" id="bankDiv">
-		<div class="col" align="center">
-			<h5 style="color:red;font-weight:bold;">[이 쇼핑몰은 상용이 아니므로 결제 API가 도입되지 않았습니다]</h5><br>
-			<p>*진행을 위해서 아래 부분을 체크해주세요.</p><br>
-			<input class="form-check-input" type="checkbox" id="bankPaid" value="1">
-			<label class="form-check-label" for="bankPaid">[무통장결제]를 선택하였습니다</label>
-		</div>
-	</div>	
-
-	<div class="form-row align-items-center" id="etcDiv">
-		<div class="form-group col" style="color:red;font-weight:bold;text-align:center;">[추가로 결제할 금액이 없습니다]</div>	
-	</div>	
-		
-	<hr class="sub-hr" noshade/>
-	
-	
-	<div class="form-row align-items-center">
-		<div class="form-group col" align="right">
-			<input type="button" class="btn btn-outline-success" value="주문하기" id="choiceOrder">	
-			<input type="button" class="btn btn-outline-secondary" value="돌아가기" id="returnBtn">	
-		</div>			
-	</div>					
-</div>
+</section>
 </body>
+<%@ include file="../include/Footer.jsp"%>
 </html>

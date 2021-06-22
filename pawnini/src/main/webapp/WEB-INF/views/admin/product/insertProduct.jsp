@@ -7,53 +7,11 @@
 
 <title>Insert title here</title>
 
-<!-- <script type="text/javascript">
-
-	function insertProduct() {
-		var product_f_code = $("#product_f_code").val();
-		var product_s_code = $("#product_s_code").val();
-		var product_f_code = $("#product_t_code").val();
-		var product_f_code2 = $("#product_t_code2").val();
-		var product_brand = $("#product_brand").val();
-		var product_name = $("#product_name").val();
-		var product_option = $("#product_option").val();
-		var product_img = $("#product_img").val();
-		var product_desc = $("#product_desc").val();
-		var product_stock = $("#product_stock").val();
-		var product_price = $("#product_price").val();
-		var product_c_price = $("#product_c_price").val();
-		
-		$.ajax({
-			type : "POST",
-			url : "insertProduct.do",
-			data : {
-				"prodcut_f_code" : product_f_code,
-				"product_s_code" : product_s_code,
-				"product_t_code" : product_t_code,
-				"product_t_code2" : product_t_code2,
-				"product_brand" : product_brand,
-				"product_name" : product_name,
-				"product_option" : product_option,
-				"product_img" : product_img,
-				"product_desc" : product_desc,
-				"product_stock" : product_stock,
-				"product_price" : product_price,
-				"product_c_price" : product_c_price
-			},
-			success : function(data) {
-				alert("등록 성공");
-			},
-			error : function(error) {
-				alert("오류");
-			}
-		});
-		
-	}
-</script> -->
 
 </head>
+   <%@ include file="../../include/Header.jsp" %> 
 <body>
-	<div class="insert_product">
+	<div class="insert_product" align="center">
 		<form action="insertProduct.do" method="post" enctype="multipart/form-data">
 		<table border="1">
 			<tr>
@@ -137,12 +95,9 @@
 		</table>
 		</form>
 
-		
-		
-
 	</div>
 </body>
-
+    <%@ include file="../../include/Footer.jsp" %>
  <script>
   $("#product_img").change(function(){
    if(this.files && this.files[0]) {

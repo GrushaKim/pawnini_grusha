@@ -15,14 +15,13 @@ public class ProductDTO {
 	private String product_thumb_img;
 	private String product_desc;
 	private int product_stock;
+	private int price;
 	private Date product_date;
 	private int product_hits;
 	private int product_price;
 	private int product_c_price;
 
-	// 검색용 (DB x)
-	private String searchCondition;
-	private String searchKeyword;
+	
 
 	
 	
@@ -40,22 +39,6 @@ public class ProductDTO {
 
 	public void setProduct_price(int product_price) {
 		this.product_price = product_price;
-	}
-
-	public String getSearchCondition() {
-		return searchCondition;
-	}
-
-	public void setSearchCondition(String searchCondition) {
-		this.searchCondition = searchCondition;
-	}
-
-	public String getSearchKeyword() {
-		return searchKeyword;
-	}
-
-	public void setSearchKeyword(String searchKeyword) {
-		this.searchKeyword = searchKeyword;
 	}
 
 	public int getProduct_id() {
@@ -146,6 +129,13 @@ public class ProductDTO {
 		this.product_stock = product_stock;
 	}
 
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
 
 	public Date getProduct_date() {
 		return product_date;
@@ -177,10 +167,9 @@ public class ProductDTO {
 				+ product_s_code + ", product_t_code=" + product_t_code + ", product_t_code2=" + product_t_code2
 				+ ", product_brand=" + product_brand + ", product_name=" + product_name + ", product_option="
 				+ product_option + ", product_img=" + product_img + ", product_thumb_img=" + product_thumb_img
-				+ ", product_desc=" + product_desc + ", product_stock=" + product_stock + ", product_date="
-				+ product_date + ", product_hits=" + product_hits + ", product_price=" + product_price
-				+ ", product_c_price=" + product_c_price + "]";
+				+ ", product_desc=" + product_desc + ", product_stock=" + product_stock + ", price=" + price
+				+ ", product_date=" + product_date + ", product_hits=" + product_hits + ", product_price="
+				+ product_price + ", product_c_price=" + product_c_price + "]";
 	}
-
 
 }

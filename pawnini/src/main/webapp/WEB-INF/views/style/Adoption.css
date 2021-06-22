@@ -1,80 +1,3 @@
-*{
-    text-decoration: none;
-        color:inherit;
-    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-}
-body{
-
-}
-.Login{
-    font-size: 20px;
-background-color: rgba(0,0,0,0.1);
-}
-
-.Login_ul{
-    display: flex;
-    font-size: 15px;
-    justify-content: flex-end;
-    align-items: center;
-    margin-right: 10px;
-  top:0px;
-  z-index:1;
-list-style: none;
-
-}
-
-.Login_ul li{
-    padding: 10px;
-}
-
-.Title{
-    display: flex;
-justify-content: center;
-font-size: 40px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  margin-top: 60px;
-  margin-bottom: 10px;
-}
-.Header_input{
-    border-style: none;
-font-size: 25px;
-margin-bottom: 10px;
-outline :none;
-margin-left: 100px;
-border-bottom: 1px solid rgba(0,0,0,0.1);
-padding: 0px 0px 10px 0px;
-}
-.Header_menu{
-  z-index:1;
-
-}
-.Header_ul{
-    display: flex;
-  position:sticky;
-  height: 60px;
-    justify-content:space-around;
-    align-items: center;
-    list-style: none;
-    margin-left: 40px;
-    font-weight: 500;
-    border-bottom: 1px solid rgba(0,0,0,0.2);
-    padding-bottom: 50px;
-}
-
-.Header_ul li{
-    width:140px;
-    position:relative;
-font-size: 20px;
-font-weight:600;
-    color:black;
-    opacity: 0.8;
-}
-
-.Header_ul li :hover{
-  color:pink;
-  transition: color 0.5s ease-in-out;
-}
-
 
 
 
@@ -150,30 +73,6 @@ align-items: center;
 }
 
 
-
-.Coment{
-    margin-top: 100px;
-    display: flex;
-border-top: 1px solid rgba(0,0,0,0.5);
-background-color: #F4F4F4;
-}
-.Coment_Ul{
-    color:black;
-display: flex;
-flex-direction: column;
-margin-left: 20px;
-margin-right: 200px;
-
-}
-.Coment_span{
-    padding: 30px 0px 20px 0px;
-display: flex;
-font-size: 13px;
-color:rgba(0,0,0,0.5);
-}
-
-
-
 body {
     margin: 0px;
   }
@@ -236,61 +135,19 @@ body {
 
   .bener_ul{
     display: grid;
-    grid-template-columns: repeat(2,1fr);
+    grid-template-columns: repeat(3,1fr);
     grid-template-rows: repeat(3,350px);
-    gap: 50px;
-    margin-left: 150px;
+    gap: 200px;
+    margin-left:200px;
     text-decoration: none;
     list-style: none;
-    text-shadow:  1px 1px 2px white;
+    text-shadow:  3px 3px 6px black;
+
       
   }
-  .bener_ul li{
-    box-shadow: 3px 3px 2px 2px rgba(0, 0, 0, 0.5);
-  }
+
   .bener_ul li:hover{
     opacity: 0.7;
-  }
-  .bener_ul li:nth-child(1){
-    background-image: url("../images/dog10.jpg");
-    background-position: center center;
-    background-size: cover;
-    
-   
-  }
-  .bener_ul li:nth-child(2){
-    background-image: url("../images/dog12.jpg");
-    background-position: center center;
-    background-size: cover;
-    
-   
-  }
-  .bener_ul li:nth-child(3){
-    background-image: url("../images/dog12.jpg");
-    background-position: center center;
-    background-size: cover;
-     
-   
-  }
-  .bener_ul li:nth-child(4){
-    background-image: url("../images/dog12.jpg");
-    background-position: center center;
-    background-size: cover;
-     width:600px;
-   
-  }
-  .bener_ul li:nth-child(5){
-    background-image: url("../images/dog12.jpg");
-    background-position: center center;
-    background-size: cover;
-     
-   
-  }
-  .bener_ul li:nth-child(6){
-    background-image: url("../images/dog12.jpg");
-    background-position: center center;
-    background-size: cover;
-     
    
   }
 
@@ -303,8 +160,3 @@ body {
       
   }
   
-  
-
-
-
-

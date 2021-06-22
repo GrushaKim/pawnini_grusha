@@ -24,27 +24,22 @@
     <!-- stlye 은 slick 영역 확인용 -->
     <div class="slider">
       <div id="slider-div">
-        <div><img class="slider-div-image" src="./images/dog10.jpg" /></div>
-        <div><img class="slider-div-image" src="./images/dog10.jpg" /></div>
-        <div><img class="slider-div-image" src="./images/dog10.jpg" /></div>
-        <div><img class="slider-div-image" src="./images/dog10.jpg" /></div>
-        <div><img class="slider-div-image" src="./images/dog10.jpg" /></div>
-        <div><img class="slider-div-image" src="./images/dog10.jpg" /></div>
+        <div><img class="slider-div-image" src="./images/slider.jpg" /></div>
+        <div><img class="slider-div-image" src="./images/slider2.jpg" /></div>
+        <div><img class="slider-div-image" src="./images/slider3.jpg" /></div>
+        <div><img class="slider-div-image" src="./images/slider4.jpg" /></div>
       </div>
     </div>
 
-    <main>
+       <main>
       <!-- <section>
         <div class="sa sa-up_own"></div>
       </section> -->
       <div class="Store_Save">
-        <h1 class="Store_h1">BUNDLE & SAVE</h1>
-        <h3 class="Store_h3">
-          Shop one of our gorgeous harness bundles below or check out our
-          complete or collar bundles in the menu!
-        </h3>
+        <h1 class="Store_h1">추천상품!!!</h1>
       </div>
-      <section class="product">
+      <section>
+        <div class="sa sa-down"></div>
         <div class="sa sa-down"></div>
         <div class="sa sa-down"></div>
         <div class="sa sa-down"></div>
@@ -54,30 +49,33 @@
         <div class="sa sa-left">디비전 8</div> -->
       </section>
 
-      <h1 class="Brand_text">Brand</h1>
+      <h1 class="Store_two_text">오늘의 할인</h1>
+      <section>
+        <div class="sa sa-_brand"></div>
+        <div class="sa sa-_brand"></div>
+        <div class="sa sa-_brand"></div>
+        <div class="sa sa-_brand"></div>
+        <div class="sa sa-_brand"></div>
+      </section>
 
-      <section>
-        <div class="sa sa-_brand"></div>
-        <div class="sa sa-_brand"></div>
-        <div class="sa sa-_brand"></div>
-        <div class="sa sa-_brand"></div>
-      </section>
+      <div>
+        <h1 class="Brand_text">인기 브랜드</h1>
+        <div class="brand">
+          <ul class="brand_grid">
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+            <li>6</li>
+            <li>7</li>
+            <li>8</li>
+          </ul>
+        </div>
+      </div>
 
-      <section class="bener_last">
-        <div class="sa sa-up"></div>
-        <h1 class="sa Text_one">Bless your dog.</h1>
-      </section>
-      <section>
-        <h1 class="sa Text_two">Please be a butler for cats.</h1>
-        <div class="sa sa-up_two"></div>
-      </section>
-      <section>
-        <div class="sa sa-up_two_last"></div>
-      </section>
-      <section>
-        <h1 class="sa Text_two_last">WelCome To PawNINI</h1>
-      </section>
     </main>
+
 
     <%@ include file="include/Footer.jsp" %>
   

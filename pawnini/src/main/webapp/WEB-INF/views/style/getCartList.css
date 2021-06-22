@@ -19,9 +19,19 @@ section#content {width: 70%; margin: 20px auto; }
 .checkBox { float:left; width:30px; }
 .checkBox input { width:16px; height:16px; }
 
-.listResult { padding:20px; background:#eee; margin-top: 30px; text-align: right;}
-.listResult .sum { float:left; width:45%; font-size:22px; margin-bottom: 10px;}
+.listResult { display: flex; padding:20px; background:#eee; margin-top: 30px; text-align: right;}
+.listResult .shipping { flex: 0.2; width:45%; font-size:12px; margin-bottom: 10px;}
+.listResult .sum { flex: 0.4; width:45%; font-size:22px; margin-bottom: 10px;}
 
-.listResult .orderInfo { float:right; width:45%; text-align:right; }
-.listResult .orderInfo button { font-size:18px; padding:5px 10px; border:1px solid #999; background:#fff;}
+.listResult #orderFormBtn { flex: 0.4; width:45%; text-align:right; }
+.listResult .orderFormBtn { font-size:18px; padding:5px 10px; border:1px solid #999; background:#fff;}
 .listResult::after { content:""; display:block; clear:both; }
+
+.orderInfo { border:5px solid #eee; padding:20px; display:none; }
+.orderInfo .inputArea { margin:10px 0; }
+.orderInfo .inputArea label { display:inline-block; width:120px; margin-right:10px; }
+.orderInfo .inputArea input { font-size:14px; padding:5px; }
+#userAddr2, #userAddr3 { width:250px; }
+
+.orderInfo .inputArea:last-child { margin-top:30px; }
+.orderInfo .inputArea button { font-size:20px; border:2px solid #ccc; padding:5px 10px; background:#fff; margin-right:20px;}

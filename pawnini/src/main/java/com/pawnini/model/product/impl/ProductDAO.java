@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.pawnini.model.product.ProductDTO;
+import com.pawnini.model.product.ProductSearchCriteria;
 
 @Repository
 public class ProductDAO {
@@ -33,21 +34,27 @@ public class ProductDAO {
 		System.out.println("mybatis => deleteProduct 실행 완료");
 	}
 	//상세 보기
-	public ProductDTO getProduct(ProductDTO dto) {
+	public ProductDTO getProduct(ProductDTO dto) throws Exception{
 		System.out.println("mybatis => getProduct 실행");
 		return (ProductDTO) mybtis.selectOne("ProductDAO.getProduct",dto);
 	}
 	//상품 리스트
-	public List<ProductDTO> getProductList(ProductDTO dto) {
+	public List<ProductDTO> getProductList(ProductSearchCriteria scri) throws Exception{
 		System.out.println("mybatis => getProductList 실행");
-		return mybtis.selectList("ProductDAO.getProductList",dto);
+		return mybtis.selectList("ProductDAO.getProductList",scri);
 	}
 	
-	//리스트 불러오기
-	public int getCountProduct(ProductDTO dto) {
+	//상품 총 갯수
+	public int getCountProduct(ProductSearchCriteria scri) throws Exception {
 		System.out.println("mybatis => 상품 카운트 불러오기");
-		return mybtis.selectOne("ProductDAO.getCountProduct",dto);
+		return mybtis.selectOne("ProductDAO.getCountProduct",scri);
 	}
+	
+	// 조회수 처리
+	public void productHits(ProductDTO dto) {
+		mybtis.update("ProductDAO.productHits",dto);
+	}
+	
 }
 
 

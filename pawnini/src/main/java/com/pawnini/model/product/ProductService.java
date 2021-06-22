@@ -14,11 +14,15 @@ public interface ProductService {
 	void deleteProduct(ProductDTO dto);
 	
 	//상품 리스트
-	List<ProductDTO> getProductList(ProductDTO dto);
+	List<ProductDTO> getProductList(ProductSearchCriteria scri) throws Exception;
 	
+	//상품 총 갯수
+	int getCountProduct(ProductSearchCriteria scri) throws Exception;
+
 	//상품 상세정보 조회
-	ProductDTO getProduct(ProductDTO dto);
+	ProductDTO getProduct(ProductDTO dto) throws Exception;
 	
-	//상품 등록갯수 조회
-	int getCountProduct(ProductDTO dto);
+	//조회수 처리
+	void productHits(ProductDTO dto);
+	
 }

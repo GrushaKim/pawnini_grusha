@@ -11,7 +11,7 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 				$(".updateCancelReplyBtn").on("click", function(){
-					location.href = "/review/getReview.do?rev_id=${replyUpdate.rev_id}";
+					location.href = "/getReview.do?rev_id=${replyUpdate.rev_id}";
 				})
 			
 		});
@@ -30,7 +30,7 @@
 
 			<div class="replyList">
 			<%-- 	<c:set var="contextPath" value="${pageContext.request.contextPath}"/> --%>
-				<form name="updateReviewReplyForm" role="form" method="post" action="/review/updateReviewReply.do">
+				<form name="updateReviewReplyForm" role="form" method="post" action="/updateReviewReply.do">
 					<input type="hidden" name="rev_id" value="${replyUpdate.rev_id}" readonly="readonly"/>
 					<input type="hidden" id="rev_com_id" name="rev_com_id" value="${replyUpdate.rev_com_id}" />
 					<table>

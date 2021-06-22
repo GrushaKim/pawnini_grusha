@@ -19,12 +19,12 @@
 		
 		$(".updateCancelBtn").on("click", function(){
 			event.preventDefault();
-			location.href = "/review/getReview.do?rev_id=${update.rev_id}&page=${scri.page}&"
+			location.href = "/getReview.do?rev_id=${update.rev_id}&page=${scri.page}&"
 							+"perPageNum=${scri.perPageNum}&searchType=${scri.searchType}&keyword=${scri.keyword}";
 			});
 		
 		$(".updateReviewBtn").on("click", function(){
-			formObj.attr("action", "/review/updateReview.do");
+			formObj.attr("action", "/updateReview.do");
 			formObj.attr("method", "post");
 			formObj.submit();
 		});

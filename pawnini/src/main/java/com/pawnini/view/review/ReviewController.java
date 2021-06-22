@@ -32,7 +32,6 @@ import com.pawnini.utils.UploadFileUtils;
 
 @Controller
 @SessionAttributes("review")
-@RequestMapping(value="/review/**")
 public class ReviewController {
 	
 	@Autowired
@@ -79,7 +78,7 @@ public class ReviewController {
 		// 후기 DB 삽입
 		reviewService.insertReview(dto);
 		
-		return "redirect:/review/getReviewList.do";
+		return "redirect:getReviewList.do";
 	}
 	
 	//후기 수정
@@ -130,7 +129,7 @@ public class ReviewController {
 		rttr.addAttribute("searchType", scri.getSearchType());
 		rttr.addAttribute("keyword", scri.getKeyword());
 		
-		return "redirect:/review/getReviewList.do";
+		return "redirect:getReviewList.do";
 	}
 	
 	//후기 삭제
@@ -146,7 +145,7 @@ public class ReviewController {
 		rttr.addAttribute("searchType", scri.getSearchType());
 		rttr.addAttribute("keyword", scri.getKeyword());
 		
-		return "redirect:/review/getReviewList.do";
+		return "redirect:getReviewList.do";
 	}
 
 	//후기 목록 불러오기 (pagination 추가)
@@ -218,7 +217,7 @@ public class ReviewController {
 		
 		rttr.addAttribute("rev_id", dto.getRev_id());
 		
-		return "redirect:/review/getReview.do";
+		return "redirect:getReview.do";
 	}
 	
 	//댓글 수정 View
@@ -240,7 +239,7 @@ public class ReviewController {
 		
 		rttr.addAttribute("rev_id", dto.getRev_id());
 		
-		return "redirect:/review/getReview.do";
+		return "redirect:getReview.do";
 	}
 	
 	//댓글 삭제
@@ -252,7 +251,7 @@ public class ReviewController {
 		
 		rttr.addAttribute("rev_id", dto.getRev_id());
 		
-		return "redirect:/review/getReview.do";
+		return "redirect:getReview.do";
 	}
 	
 	

@@ -95,7 +95,11 @@ public class MainController {
 	}
 	@RequestMapping("/getOrderForm.do")
 	public String orderForm() {
-		return "order/OrderForm";
+		return "order/orderForm";
+	}
+	@RequestMapping("/basket.do")
+	public String basket() {
+		return "basket";
 	}
 }
 

@@ -27,27 +27,27 @@
 		var formObj = $("form[name='reviewForm']");
 		
 		$(".reviewReplyUpdateBtn").on("click", function(){
-			location.href = "/review/updateReviewReplyView.do?rev_id=${review.rev_id}&rev_com_id="+$(this).attr("data-rno");
+			location.href = "/updateReviewReplyView.do?rev_id=${review.rev_id}&rev_com_id="+$(this).attr("data-rno");
 		});
 		
 		$(".reviewReplyDeleteBtn").on("click", function(){
-			location.href = "/review/deleteReviewReply.do?rev_id=${review.rev_id}&rev_com_id="+$(this).attr("data-rno");
+			location.href = "/deleteReviewReply.do?rev_id=${review.rev_id}&rev_com_id="+$(this).attr("data-rno");
 		});
 		
 		$(".reviewListBtn").on("click", function(){
-			location.href = "/review/getReviewList.do?page=${scri.page}&perPageNum=${scri.perPageNum}"
+			location.href = "/getReviewList.do?page=${scri.page}&perPageNum=${scri.perPageNum}"
 							+"&searchType=${scri.searchType}&keyword=${scri.keyword}";
 		});
 		
 		$(".updateBtn").on("click", function(){
-			location.href = "/review/updateReviewView.do?rev_id=${review.rev_id}&page=${scri.page}&perPageNum=${scri.perPageNum}"
+			location.href = "/updateReviewView.do?rev_id=${review.rev_id}&page=${scri.page}&perPageNum=${scri.perPageNum}"
 							+"&searchType=${scri.searchType}&keyword=${scri.keyword}";
 		});
 		
 		$(".reviewDeleteBtn").on("click", function(){
 			var deleteChk = confirm("게시글을 삭제하시겠습니까?");
 			if(deleteChk == true){
-				formObj.attr("action", "/review/deleteReview.do");
+				formObj.attr("action", "/deleteReview.do");
 				formObj.attr("method", "post");
 				formObj.submit();
 			}
@@ -72,7 +72,7 @@
 			var that = $(".like");
 			var sendData = {'rev_id' : '${review.rev_id}', 'like' : that.prop('name')};
 			$.ajax({
-				url: '/review/reviewLike.do',
+				url: '/reviewLike.do',
 				type: 'post',
 				data: sendData,
 				success: function(data){
@@ -94,7 +94,7 @@
 			var that = $(".totalLike")
 			var sendData = {'rev_id' : '${review.rev_id}', 'totalLike' : that.prop('name')};
 			$.ajax({
-				url: '/review/reviewLikeCount.do',
+				url: '/reviewLikeCount.do',
 				type: 'post',
 				data: sendData,
 				success: function(count){
@@ -190,7 +190,7 @@
 	
 	<!-- 후기 댓글 작성 -->
 	<%-- <c:set var="contextPath" value="${pageContext.request.contextPath}"/> --%>
-	<form name="reviewReplyForm" class="form-horizontal" method="post" action="/review/insertReviewReply.do">
+	<form name="reviewReplyForm" class="form-horizontal" method="post" action="/insertReviewReply.do">
 		<input type="hidden" id="rev_id" name="rev_id" value="${review.rev_id}">
 		<input type="hidden" name="member_id" value="${member.member_id}"/>
 		

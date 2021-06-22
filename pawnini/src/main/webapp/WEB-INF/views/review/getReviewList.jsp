@@ -62,7 +62,7 @@
 				<script>
 					$(function(){
 						$("#searchBtn").click(function(){
-							self.location = "/review/getReviewList.do"+'${pageMaker.makeQuery(1)}' + "&searchType=" + $("select option:selected").val() + "&keyword=" + encodeURIComponent($('#keywordInput').val()); 
+							self.location = "/getReviewList.do"+'${pageMaker.makeQuery(1)}' + "&searchType=" + $("select option:selected").val() + "&keyword=" + encodeURIComponent($('#keywordInput').val()); 
 						});
 					});
 				</script>
@@ -84,7 +84,7 @@
 				<td>${review.rev_id}	
 				<td>${review.product_id}	
 				<td>${review.rev_writer}
-				<td><a href="/review/getReview.do?rev_id=${review.rev_id}&
+				<td><a href="/getReview.do?rev_id=${review.rev_id}&
 														page=${scri.page}&
 														perPageNum=${scri.perPageNum}&
 														searchType=${scri.searchType}&

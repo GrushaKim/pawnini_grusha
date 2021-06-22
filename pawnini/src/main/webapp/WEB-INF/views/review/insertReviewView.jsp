@@ -47,7 +47,7 @@ $("#rev_f_img").change(function(){
 		</div>
 	<div>
 
-		<form action="/review/insertReview.do" method="post" enctype="multipart/form-data">
+		<form action="/insertReview.do" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="member_id" value="${member.member_id}"/>
 			<table border="1">
 				<tr>
@@ -92,7 +92,7 @@ $("#rev_f_img").change(function(){
 					<td><input type="submit" value="등록">
 			</table>
 		</form>
-		<a href="/review/getReviewList.do">목록</a>
+		<a href="/getReviewList.do">목록</a>
 	</div>
 </body>
 
