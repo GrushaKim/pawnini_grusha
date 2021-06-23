@@ -7,6 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
 <style>
 .orderInfo { border:5px solid #eee; padding:20px; }
 .orderInfo .inputArea { margin:10px 0; }
@@ -16,9 +18,63 @@
 
 .orderInfo .inputArea:last-child { margin-top:30px; }
 .orderInfo .inputArea button { font-size:20px; border:2px solid #ccc; padding:5px 10px; background:#fff; margin-right:20px;}
+
 </style>
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
+$(document).ready(function(){
+	
+	/* 최종 결제 금액 표시 */
+	var finalSum = $("#finalSum").val();
+	$("#ord_total").text(Number(finalSum).toLocaleString('en'));
+	
+	/* 배송지 정보 */
+	$("input[type=radio][name=del_info]").change(function(){
+		if(this.value == "del_default"){
+			/* 기본 배송지(회원가입 시 입력한 정보) 불러오기 */
+			$("input[name=recipient_name]").val($("#h_member_name").val());
+			$("input[name=recipient_name]").attr("readonly", true);
+			$("input[name=ord_phone]").val($("#h_member_phone").val());
+			$("input[name=ord_phone]").attr("readonly", true);
+			$("input[name=ord_email]").val($("#h_member_email").val());
+			$("input[name=ord_email]").attr("readonly", true);
+			$("input[name=ord_postcode]").val($("#h_member_postcode").val());
+			$("input[name=ord_postcode]").attr("readonly", true);
+			$("input[name=ord_f_addr]").val($("#h_member_f_addr").val());
+			$("input[name=ord_f_addr]").attr("readonly", true);
+			$("input[name=ord_s_addr]").val($("#h_member_s_addr").val());
+			$("input[name=ord_s_addr]").attr("readonly", true);
+			$("#schPost").css("visibility", "hidden");
+		}else if(this.value == "del_new"){
+			/* 신규 배송지 입력 */
+			$("input[name=recipient_name]").val("");
+			$("input[name=recipient_name]").attr("readonly", false);
+			$("input[name=ord_phone]").val("");
+			$("input[name=ord_phone]").attr("readonly", false);
+			$("input[name=ord_email]").val("");
+			$("input[name=ord_email]").attr("readonly", false);
+			$("input[name=ord_postcode]").val("");
+			$("input[name=ord_postcode]").attr("readonly", true);
+			$("input[name=ord_f_addr]").val("");
+			$("input[name=ord_f_addr]").attr("readonly", false);
+			$("input[name=ord_s_addr]").val("");
+			$("input[name=ord_s_addr]").attr("readonly", false);
+			$("#schPost").css("visibility", "visible");
+		}
+	});
+	
+	/* 이용약관 전체 동의 체크박스 */
+	$("#checkAllTerms").click(function(){
+		if($("#checkAllTerms").prop("checked")){
+			$("input[name=checkTerms]").prop("checked", true);
+		}else {
+			$("input[name=checkTerms]").prop("checked", false);
+		}
+	});
+	
+});
+
+/* 다음 도로명 주소 찾기 */
 function execPostCode() {
     new daum.Postcode({
         oncomplete: function(data) {
@@ -45,24 +101,124 @@ function execPostCode() {
            $("[name=ord_f_addr]").val(fullRoadAddr);
         }
     }).open();
-}
+};
 
+/* 적립금 사용금액 입력 */
+function chkMileage(input, mileage){
+		var tmpMileage = parseInt(input.value);
+		if(tmpMileage>mileage || tempMileage>10000){
+			alert('사용 가능한 적립금을 초과했습니다.');
+			input.value=0;
+			return;
+		}
+		
+	}
+
+/* 적립금 전체 사용 체크 */
+function useAllMileage(mileage){
+		
+		if($("#chkAll").is(":checked") == true){
+			$("#ord_used_mileage").val(mileage);
+		}else{
+			$("#ord_used_mileage").val(0);
+			$("#ord_used_mileage").select();
+		}
+	}
+
+/* 사용한 적립금 취소 */
+function cancelMileage(finalSum){
+		$("#ord_total").text(Number(finalSum).toLocaleString('en'));
+		$("#ord_used_mileage").val(0);
+		$("#ord_used_mileage").attr("readonly", false);
+		$("input[name=chkAll]").prop("checked", false);
+	}
+
+/* 적립금 사용 후 최종 결제 금액 구하기 */
+function calcFinalSum(ord_used_mileage, finalSum){
+		
+		var total = finalSum - ord_used_mileage;
+		$("#ord_total").text(Number(total).toLocaleString('en'));
+		$("#ord_used_mileage").attr("readonly", true);
+		$("input[name=chkAll]").prop("checked", false);
+	}
+
+/* 주문서 작성 취소 */
 function orderCancel(){
 	window.history.back();
-}
-function showSelect(ord_payment){
-	if(ord_payment == '무통장입금'){
-		$('#bank').show();
-		$('#card').hide();
-		$('#ord_bank').prop("disabled", false);
-		$('#ord_card').prop("disabled", true);
-	}else if(ord_payment =='카드결제'){
-		$('#bank').hide();
-		$('#card').show();
-		$('#ord_bank').prop("disabled", true);
-		$('#ord_card').prop("disabled", false);
+};
+
+/* 카드 정보 숫자 입력 제한 */
+function onlyNumber() {
+	if((event.keyCode<48)||(event.keyCode>57)){
+		event.returnValue=false;
 	}
+};
+
+/* 주문하기 버튼 클릭 시 실행(필수 정보 입력 여부 체크) */
+function finalCheck() {
+	var checkTerms1 = $("#checkTerms1").is(":checked");
+	var checkTerms2 = $("#checkTerms2").is(":checked");
+	var member_id = $("#member_id").val();
+	var recipient_name = $("input[name=recipient_name]").val();
+	var ord_phone = $("input[name=ord_phone]").val();
+	var ord_postcode = $("input[name=ord_postcode]").val();
+	var ord_f_addr = $("input[name=ord_f_addr]").val();
+	var ord_s_addr = $("input[name=ord_s_addr]").val();
+	var ord_req_msg = $("input[name=ord_req_msg]").val();
+	var ord_card_info1 = $("#ord_card_info1").val();
+	var ord_card_info2 = $("#cardno1").val()+"-"+$("#cardno2").val()+"-"+$("#cardno3").val()+$("#cardno3").val();
+	var ord_used_mileage = $("ord_used_mileage").val();
+	var ord_total = $("#ord_total").val();
+	var data = {
+			"member_id" : member_id,
+			"recipient_name" : recipient_name,
+			"ord_phone" : ord_phone,
+			"ord_postcode" : ord_postcode,
+			"ord_f_addr" : ord_f_addr,
+			"ord_s_addr" : ord_s_addr,
+			"ord_card_info1" : ord_card_info1,
+			"ord_card_info2" : ord_card_info2,
+			"ord_used_mileage" : ord_used_mileage,
+			"ord_total" : ord_total
+	};
+	
+	if(checkTerms1 == true && checkTerms2 == true && $("#cardno1").val() != "" 
+			&& $("#cardno2").val() != "" && $("#cardno3").val() != "" 
+			&& $("#cardno4").val() != "" && $("#cardno5").val() != ""){
+		
+		swal({
+			icon : "info",
+			text : "결제를 진행하시겠습니까?",
+			closeOnClickOutside : false,
+			CloseOnEsc : false,
+			buttons : ["결제하기", "취소"],
+		}, function(isConfirm){
+			if(isConfirm){
+				swal("", "결제 완료", "success");
+				$.ajax({
+					type : "post",
+					url : "",
+					data : data,
+					success : function(){
+						alert('ajax insertorder 성공');
+						window.location.href = "main.do";
+					},
+					error : function(){
+						alert('ajax insertorder 실패');
+						/* window.location.href = "main.do"; */
+					}
+				})
+			}else if(checkTerm1 == false || checkTerm2 == false){
+				swal("", "이용약관에 동의해 주시기 바랍니다.", "info");
+			} else {
+				swal("", "카드 정보를 확인해 주시기 바랍니다.", "info");
+			}
+		});
+			
+		}
+			
 }
+
 </script>
 </head>
 <%@ include file="../include/Header.jsp"%>
@@ -70,8 +226,9 @@ function showSelect(ord_payment){
 
 
 <section id="content">
-  
+ 
 <br><br><br>
+	주문상품
 	<table border="1">
 			<tr>
 				<th></th>
@@ -87,7 +244,7 @@ function showSelect(ord_payment){
 				<td style="width: 80px" align="right">
 					<fmt:formatNumber pattern="###,###,###" value="${row.product_price}" />
 				<td>
-					<input type="number" id="cart_amount" style="width:40px" name="cart_amount" value="${row.cart_amount}" />
+					${row.cart_amount}
 					<input type="hidden" id="product_id" name="product_id" value="${row.product_id}" />
 					<input type="hidden" id="cart_id" name="cart_id" value="${row.cart_id}" />
 					<input type="hidden" id="member_id" name="member_id" value="${member.member_id}" />
@@ -98,101 +255,150 @@ function showSelect(ord_payment){
 				
 		</table>
 		
-		<!-- 주문 정보 입력 -->
-				
+		<!-- 주문정보 입력 -->
  <form role="form" method="post" autocomplete="off" action="insertOrder.do">
+ 	<input type="hidden" id="h_member_name" value="${member.member_name}" />
+ 	<input type="hidden" id="h_member_phone" value="${member.member_phone}" />
+ 	<input type="hidden" id="h_member_email" value="${member.member_email}" />
+ 	<input type="hidden" id="h_member_postcode" value="${member.member_postcode}" />
+ 	<input type="hidden" id="h_member_f_addr" value="${member.member_f_addr}" />
+ 	<input type="hidden" id="h_member_s_addr" value="${member.member_s_addr}" />
+ 	주문정보
+ 	<div class="orderInfo">
+		<div class="inputArea">
+			<label for="">주문자명</label>
+   			<input type="text" name="ord_name" id="orderRec" value="${member.member_name}" readonly />
+		</div>
+		<div class="inputArea">
+			<label for="">연락처</label>
+   			<input type="text" name="ord_contact" id="orderRec" value="${member.member_phone}" readonly />
+		</div>
+		<div class="inputArea">
+   			<label for="orderPhone">이메일</label>
+   			<input type="email" name="ord_email" id="orderPhone" value="${member.member_email}" readonly />
+   		</div>
+	</div>
+		<!-- 배송정보 입력 -->
+배송정보				
 <div class="orderInfo">
+	<div class="inputArea">
+		<input type="radio" name="del_info" id="del_new" value="del_new" checked/>신규 배송지
+		<input type="radio" name="del_info" id="del_default" value="del_default" />기본 배송지
+	</div>
   <div class="inputArea">
-   <label for="">수령인</label>
+   <label for="">수령인명</label>
    <input type="text" name="recipient_name" id="orderRec" required />
   </div>
   
   <div class="inputArea">
    <label for="orderPhone">연락처</label>
-   <input type="text" name="ord_phone" id="orderPhone" placeholder="010-xxxx-xxxx" required />
+   <input type="text" name="ord_phone" id="orderPhone" placeholder="010-1234-1234" required />
   </div>
   
   <div class="inputArea">
    <label for="userAddr1">우편번호</label>
-   <input type="text" name="ord_postcode" id="userAddr1" required="required" readonly />
-   <button type="button" class="btn btn-default" onclick="execPostCode();"><i class="fa fa-search"></i>우편번호 찾기</button>
+   <input type="text" name="ord_postcode" id="userAddr1" placeholder="XXXXX" required readonly />
+   <button type="button" id="schPost" class="btn btn-default" onclick="execPostCode()"><i class="fa fa-search"></i>우편번호 찾기</button>
   </div>
   
   <div class="inputArea">
    <label for="userAddr2">도로명 주소</label>
-   <input type="text" name="ord_f_addr" id="userAddr2" required="required" readonly />
+   <input type="text" name="ord_f_addr" id="userAddr2" placeholder="서울시 성동구 왕십리로 42" required readonly />
   </div>
   
   <div class="inputArea">
    <label for="userAddr3">상세 주소</label>
-   <input type="text" name="ord_s_addr" id="userAddr3" required="required" />
+   <input type="text" name="ord_s_addr" id="userAddr3" placeholder="골댕이아파트 101동 101호" required />
   </div>
 
   <div class="inputArea">
-   <label for="reqMessage">요청사항</label>
-   <input type="text" name="reqMessage" id="reqMessage" />
+   <label for="ord_req_msg">요청사항</label>
+   <textarea name="ord_req_msg" id="ord_req_msg" placeholder="100자 이내로 작성해 주시기 바랍니다." cols="70" rows="4" /></textarea>
   </div>
   </div>
   <hr>
   
   <!-- 결제정보  -->
-  	<div class="orderInfo">
+  	결제정보
+  		<div class="orderInfo">
+  		<input type="hidden" id="finalSum" value="${map.finalSum}" />
   		<div class="inputArea">
- 	<fmt:formatNumber pattern="###,###,###" value="${map.sumTotal}" /> 원 + 
-		${map.shippingFee} 원 (5만원 이상 배송비 무료) = 
-	결제금액: <fmt:formatNumber pattern="###,###,###" value="${map.finalSum}" /> 원
-  	<br>
+  		상품주문금액 &nbsp;&nbsp;
+ 		<fmt:formatNumber pattern="###,###,###" value="${map.sumTotal}" /> 원&nbsp; +&nbsp; 
+		${map.shippingFee} 원 (5만원 이상 배송비 무료)  &nbsp;&nbsp;&nbsp; = &nbsp;&nbsp;&nbsp;  
+		최종결제금액 &nbsp;&nbsp;<span id="ord_total"></span>
+		
   		</div>
-  		<div class="inputArea">
+  		<div class="inputArea" id="mileageArea">
   		<b>적립금 </b> : 
-  		<input name="usedMileage" id="usedMileage" type="text" value="0" size="10" 
-  				oninput="chkMileage(this, '${member.member_mileage}')"/>원 
-  		&nbsp;(가용 적립금 : <span style="color:scarlet; font-weight:bold">${member.member_mileage} 원</span>
-  		<input type="checkbox" onclick="useAllMileage('ㅁ')">전부 사용하기)
-  		<input type="button" value="사용하기" onclick="">
-  		<p>적립금은 1,000원 이상일 경우 결제에 사용할 수 있습니다.</p>
+  		<input name="ord_used_mileage" id="ord_used_mileage" type="text" value="0" size="10" 
+  				oninput="chkMileage(this, '${map.mileage}')" onchange="alertMileageUse()"/>원 
+  		&nbsp;(가용 적립금 : <span style="color:crimson; font-weight:bold">${map.mileage} 원</span>
+  		<input type="checkbox" name="chkAll" id="chkAll" onclick="useAllMileage('${map.mileage}')">전부 사용하기)
+  		<input type="button" value="사용" onclick="calcFinalSum(ord_used_mileage.value, '${map.finalSum}')"/>
+  		<input type="button" value="취소" onclick="cancelMileage('${map.finalSum}')"/>
+  		<p>적립금은 1,000원 이상일 경우 결제에 사용가능하며 주문 1건당 최대 가용 적립금은 10,000원입니다.</p>
+  		<p>배송비, 특가상품은 적립금 사용이 불가합니다.</p>
   		</div>
   	</div>
   	<br>
   	<div class="orderInfo">
   		<div class="inputArea">
    			<label for="ord_payment">결제수단</label>
-   			<input type="radio" name="ord_payment" id="ord_payment" value="무통장입금" onclick="showSelect(this.value)" checked />카드결제
-   			<input type="radio" name="ord_payment" id="ord_payment" value="카드결제" onclick="showSelect(this.value)"  />무통장입금
-   			<input type="radio" name="ord_payment" id="ord_payment" value="카카오페이" />카카오페이
-   			<input type="radio" name="ord_payment" id="ord_payment" value="페이코" />PAYCO
-   		</div>
-   		<div class="inputArea">
-   				<span id="bank">
-   				<select name="ord_bank" id="ord_bank">
-   					<option value="1">카카오뱅크</option>
-   					<option value="2">미래은행</option>
-   					<option value="3">우리은행</option>
+   			<input type="radio" name="ord_payment" id="ord_payment" value="카드결제" checked />카드결제
+   			<input type="radio" name="ord_payment" id="ord_payment" value="카카오페이" disabled />카카오페이
+   			<input type="radio" name="ord_payment" id="ord_payment" value="페이코" disabled/>PAYCO
+   			<input type="radio" name="ord_payment" id="ord_payment" value="계좌이체" disabled/>계좌이체
+   			<br><br><br>
+   			<div id="cardInfo">
+   				<span id="cardCompany">
+   				<select name="ord_card_info1" id="ord_card_info1">
+   					<option value="미래카드">미래카드</option>
+   					<option value="삼성카드">삼성카드</option>
+   					<option value="현대카드">현대카드</option>
+   					<option value="신한카드">신한카드</option>
+   					<option value="국민카드">국민카드</option>
    				</select>
    				</span>
-   		</div>
-   		<div class="inputArea">
-   				<span id="card">
-   				<select name="ord_card" id="ord_card">
-   					<option value="1">미래카드</option>
-   					<option value="2">삼성카드</option>
-   					<option value="3">현대카드</option>
-   				</select>
-   				</span>
-   				<span id="card_info">
-   				<input type="text" name="card_info" size="20" />
-   				</span>
-   		</div>
+   				&nbsp;&nbsp;&nbsp;&nbsp;카드번호&nbsp;&nbsp;
+   				<input type="text" id="cardno1" maxlength="4" size="4" onkeypress="onlyNumber()"/>
+   				<input type="password" id="cardno2" maxlength="4" size="4" onkeypress="onlyNumber()"/>
+   				<input type="password" id="cardno3" maxlength="4" size="4" onkeypress="onlyNumber()"/>
+   				<input type="text" id="cardno4" maxlength="4" size="4" onkeypress="onlyNumber()" />
+   				&nbsp;&nbsp;CVC (카드 뒷면 3자리 숫자)&nbsp;&nbsp;
+   				<input type="password" id="cardno5" maxlength="3" size="3" onkeypress="onlyNumber()" />
+   				
+   			</div>
    		
+  		</div>
   	</div>
   
-   <button type="submit" class="orderBtn">주문</button>
-   <button type="button" class="orderCancelBtn" onclick="orderCancel();">취소</button>
+ 	<!-- 이용약관 동의 -->
+ 	<div class="orderInfo">
+ 		<input type="checkbox" id="checkAllTerms" />
+ 		하기 쇼핑몰 이용약관, 처리방침에 모두 동의합니다. 
+ 		<div class="inputArea">
+ 			<input type="checkbox" id="checkTerms1" name="checkTerms" /> 전자상거래 이용약관에 동의합니다. <br>
+ 			<textarea id="term1" rows="15" cols="150" readonly>
+ 			<%@ include file="../include/terms1.jsp" %>
+ 			</textarea>
+ 		</div>
+ 		<div class="inputArea">
+ 			<input type="checkbox" id="checkTerms2" name="checkTerms" /> 개인정보처리방침에 동의합니다. <br>
+ 			<textarea id="term1" rows="15" cols="150" readonly>
+ 			<%@ include file="../include/terms2.jsp" %>
+ 			</textarea>
+ 		</div>
+ 	</div>
+ 	
+ 	<button type="button" class="orderBtn" onclick="finalCheck()">결제하기</button>
+   <button type="button" class="orderCancelBtn" onclick="orderCancel()">취소</button>
   
   
  </form> 
 
 </section>
+
 </body>
 <%@ include file="../include/Footer.jsp"%>
 </html>

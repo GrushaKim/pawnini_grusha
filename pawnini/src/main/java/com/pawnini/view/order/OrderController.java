@@ -33,10 +33,13 @@ public class OrderController {
 	@Autowired
 	OrderService orderService;
 	
+	// 주문+결제 
+	
 	@RequestMapping(value="orderFormView.do")
 	public ModelAndView orderFormView(HttpSession session, ModelAndView mav) throws Exception{
 		MemberDTO member = (MemberDTO)session.getAttribute("member");
 		String member_id = member.getMember_id();
+		int mileage = member.getMember_mileage();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<CartDTO> cartList = orderService.getCartList(member_id);
@@ -49,6 +52,7 @@ public class OrderController {
 		map.put("sumTotal",  sumTotal);
 		map.put("shippingFee",  shippingFee);
 		map.put("finalSum", sumTotal+shippingFee);
+		map.put("mileage", mileage);
 		mav.setViewName("order/orderForm");
 		mav.addObject("map", map);
 		
@@ -120,6 +124,7 @@ public class OrderController {
 		
 	}
 	
+	// 장바구니 
 	
 	@ResponseBody
 	@RequestMapping(value="addToCart.do", method= {RequestMethod.GET, RequestMethod.POST})
@@ -196,47 +201,5 @@ public class OrderController {
 		//redirect 작동 여부 재확인
 		return "redirect:getCartList.do";
 	}
-	
-
-	/*@RequestMapping(value="getCartList.do", method= {RequestMethod.GET, RequestMethod.POST})
-	public String getCartList(HttpSession session, Model model) throws Exception {
-		System.out.println("getCartList.do 작동");
-		
-		MemberDTO member = (MemberDTO)session.getAttribute("member");
-		String member_id = member.getMember_id();
-		List<CartListDTO> cartList = orderService.getCartList(member_id);
-
-		model.addAttribute("cartList", cartList);
-		
-		return "order/getCartList";
-		
-	}*/
-	
-	/*@ResponseBody
-	@RequestMapping(value="deleteCart.do", method=RequestMethod.POST)
-	public int deleteCart(HttpSession session, @RequestParam(value="chbox[]") List<String> chArr, CartDTO dto) throws Exception{
-			System.out.println("deleteCart.do 작동");
-		
-		MemberDTO member = (MemberDTO)session.getAttribute("member");
-		String member_id = member.getMember_id();
-		
-		int result = 0;
-		int cart_id = 0;
-		
-		
-		if(member != null) {
-			dto.setMember_id(member_id);
-			
-			for(String i : chArr) {
-				cart_id = Integer.parseInt(i);
-				dto.setCart_id(cart_id);
-				orderService.deleteCart(dto);
-			}
-			result = 1;
-		}
-		return result;
-	}*/
-	
-	
 	
 }

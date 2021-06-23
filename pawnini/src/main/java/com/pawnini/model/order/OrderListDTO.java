@@ -10,6 +10,7 @@ public class OrderListDTO {
 	private String ord_postcode;
 	private String ord_f_addr;
 	private String ord_s_addr;
+	private String ord_email;
 	private String ord_phone;
 	private Date ord_date;
 	private int ord_total;
@@ -110,18 +111,23 @@ public class OrderListDTO {
 	public int getOrd_total() {
 		return ord_total;
 	}
-	public void setOrd_total(int ord_totsal) {
+	public void setOrd_total(int ord_total) {
 		this.ord_total = ord_total;
+	}
+	public String getOrd_email() {
+		return ord_email;
+	}
+	public void setOrd_email(String ord_email) {
+		this.ord_email = ord_email;
 	}
 	@Override
 	public String toString() {
 		return "OrderListDTO [ord_id=" + ord_id + ", member_id=" + member_id + ", recipient_name=" + recipient_name
 				+ ", ord_postcode=" + ord_postcode + ", ord_f_addr=" + ord_f_addr + ", ord_s_addr=" + ord_s_addr
-				+ ", ord_phone=" + ord_phone + ", ord_date=" + ord_date + ", ord_total=" + ord_total + ", ord_d_id="
-				+ ord_d_id + ", product_id=" + product_id + ", cart_amount=" + cart_amount + ", product_name="
-				+ product_name + ", product_thumb_img=" + product_thumb_img + ", product_price=" + product_price + "]";
+				+ ", ord_email=" + ord_email + ", ord_phone=" + ord_phone + ", ord_date=" + ord_date + ", ord_total="
+				+ ord_total + ", ord_d_id=" + ord_d_id + ", product_id=" + product_id + ", cart_amount=" + cart_amount
+				+ ", product_name=" + product_name + ", product_thumb_img=" + product_thumb_img + ", product_price="
+				+ product_price + "]";
 	}
-	
-	
 	
 }

@@ -10,8 +10,13 @@ public class OrderDTO {
 	private String ord_f_addr;
 	private String ord_s_addr;
 	private String ord_phone;
+	private String ord_email;
 	private String member_id;
 	private int ord_total;
+	private String ord_req_msg;
+	private String ord_card_info1;
+	private String ord_card_info2;
+	private int ord_used_mileage;
 	public String getOrd_id() {
 		return ord_id;
 	}
@@ -66,11 +71,42 @@ public class OrderDTO {
 	public void setOrd_total(int ord_total) {
 		this.ord_total = ord_total;
 	}
+	public String getOrd_email() {
+		return ord_email;
+	}
+	public void setOrd_email(String ord_email) {
+		this.ord_email = ord_email;
+	}
+	public String getOrd_req_msg() {
+		return ord_req_msg;
+	}
+	public void setOrd_req_msg(String ord_req_msg) {
+		this.ord_req_msg = ord_req_msg;
+	}
+	public String getOrd_card_info1() {
+		return ord_card_info1;
+	}
+	public void setOrd_card_info1(String ord_card_info1) {
+		this.ord_card_info1 = ord_card_info1;
+	}
+	public String getOrd_card_info2() {
+		return ord_card_info2;
+	}
+	public void setOrd_card_info2(String ord_card_info2) {
+		this.ord_card_info2 = ord_card_info2;
+	}
+	public int getOrd_used_mileage() {
+		return ord_used_mileage;
+	}
+	public void setOrd_used_mileage(int ord_used_mileage) {
+		this.ord_used_mileage = ord_used_mileage;
+	}
 	@Override
 	public String toString() {
 		return "OrderDTO [ord_id=" + ord_id + ", recipient_name=" + recipient_name + ", ord_date=" + ord_date
 				+ ", ord_postcode=" + ord_postcode + ", ord_f_addr=" + ord_f_addr + ", ord_s_addr=" + ord_s_addr
-				+ ", ord_phone=" + ord_phone + ", member_id=" + member_id + ", ord_total=" + ord_total + "]";
+				+ ", ord_phone=" + ord_phone + ", ord_email=" + ord_email + ", member_id=" + member_id + ", ord_total="
+				+ ord_total + ", ord_req_msg=" + ord_req_msg + ", ord_card_info1=" + ord_card_info1
+				+ ", ord_card_info2=" + ord_card_info2 + ", ord_used_mileage=" + ord_used_mileage + "]";
 	}
-	
 }

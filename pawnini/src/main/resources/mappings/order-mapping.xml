@@ -3,11 +3,13 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="OrderDAO">
-	
+
 	<!-- 주문 정보 삽입 -->
 	<insert id="insertOrder" parameterType="order">
 	<![CDATA[
-		 INSERT INTO ORD (ORD_ID, RECIPIENT_NAME, ORD_POSTCODE, ORD_F_ADDR, ORD_S_ADDR, ORD_PHONE, ORD_TOTAL MEMBER_ID)
+		 INSERT INTO ORD (ORD_ID, RECIPIENT_NAME, ORD_POSTCODE, ORD_F_ADDR, ORD_S_ADDR, 
+		 ORD_PHONE, ORD_REQ_MSG, ORD_CARD_INFO1, ORD_CARD_INFO2, ORD_USED_MILEAGE, 
+		 ORD_TOTAL, MEMBER_ID)
 			VALUES (
                 #{ord_id},
                 #{recipient_name},
@@ -15,6 +17,10 @@
                 #{ord_f_addr},
                 #{ord_s_addr},
                 #{ord_phone},
+                #{ord_req_msg},
+                #{ord_card_info1},
+                #{ord_card_info2},
+                #{ord_used_mileage},
                 #{ord_total},
                 #{member_id}
                 )
@@ -39,7 +45,7 @@
 	
 	<!-- 상세 주문 보기 -->
 	<select id="getOrderDetails" resultType="orderList">
-		SELECT O.ORD_ID, O.MEMBER_ID, O.RECIPIENT_NAME, O.ORD_POSTCODE, O.ORD_F_ADDR, O.ORD_S_ADDR, O.ORD_PHONE, O.ORD_DATE, O.ORD_TOTAL,
+		SELECT O.ORD_ID, O.MEMBER_ID, O.RECIPIENT_NAME, O.ORD_EMAIL, O.ORD_POSTCODE, O.ORD_F_ADDR, O.ORD_S_ADDR, O.ORD_PHONE, O.ORD_DATE, O.ORD_TOTAL,
                 D.ORD_D_ID, D.PRODUCT_ID, D.CART_AMOUNT,
                 P.PRODUCT_NAME, P.PRODUCT_THUMB_IMG, P.PRODUCT_PRICE
 		FROM ORD O
@@ -55,7 +61,7 @@
 	
 	<!-- 관리자:특정 주문 불러오기 -->
 	<select id="getOrder" resultType="orderList">
-		SELECT O.ORD_ID, O.MEMBER_ID, O.RECIPIENT_NAME, O.ORD_POSTCODE, O.ORD_F_ADDR, O.ORD_S_ADDR, O.ORD_PHONE, O.ORD_DATE, O.ORD_TOTAL,
+		SELECT O.ORD_ID, O.MEMBER_ID, O.RECIPIENT_NAME, O.ORD_EMAIL, O.ORD_POSTCODE, O.ORD_F_ADDR, O.ORD_S_ADDR, O.ORD_PHONE, O.ORD_DATE, O.ORD_TOTAL,
 	                D.ORD_D_ID, D.PRODUCT_ID, D.CART_AMOUNT,
 	                P.PRODUCT_NAME, P.PRODUCT_THUMB_IMG, P.PRODUCT_PRICE
 	    FROM ORD O
