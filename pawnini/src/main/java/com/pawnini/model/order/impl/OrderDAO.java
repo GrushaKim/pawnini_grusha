@@ -81,6 +81,18 @@ public class OrderDAO {
 		mybatis.update("OrderDAO.updateStock", dto);
 	}
 	
+	//주문 삭제
+	public void deleteOrder(OrderDTO dto) throws Exception{
+		System.out.println("Mybatis/deleteOrder() 기능처리 시작");
+		mybatis.delete("OrderDAO.deleteOrder", dto);
+	}
+	
+	//주문 취소 적립금 환불
+	public void refundMileage(OrderDTO dto) throws Exception{
+		System.out.println("Mybatis/refundMileage() 기능처리 시작");
+		mybatis.update("OrderDAO.refundMileage", dto);
+	}
+	
 	//장바구니 제품 추가
 	public void addToCart(CartDTO dto) throws Exception{
 		System.out.println("Mybatis/addToCart() 기능처리 시작");

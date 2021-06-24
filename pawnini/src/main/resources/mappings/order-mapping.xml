@@ -109,12 +109,23 @@
 	]]>
 	</update>
 	
-	<!-- 상기 보조 테이블 -->
-	<select id="updateStockSub" resultType="orderDetails">
-		SELECT ORD_ID, PRODUCT_ID, CART_AMOUNT
-		  FROM ORD_DETAILS
-		 WHERE ORD_ID = #{ord_id}
-	</select>
+	<!-- 주문 삭제 -->
+	<delete id="deleteOrder">
+	<![CDATA[
+		DELETE ORD
+		WHERE ORD_ID = #{ord_id} AND ORD_STATUS = '배송 준비 중'
+	]]>
+	</delete>
+
+	<!-- 주문 취소 시 사용한 적립금 환불 -->
+	<update id="refundMileage">
+	<![CDATA[
+		UPDATE (SELECT M.MEMBER_MILEAGE AS MILEAGE1 , O.ORD_USED_MILEAGE AS MILEAGE2, O.MILEAGE_STATUS 
+			FROM MEMBER M INNER JOIN ORD O ON M.MEMBER_ID = O.MEMBER_ID 
+			WHERE O.MEMBER_ID=#{member_id} AND O.ORD_ID=#{ord_id} AND O.MILEAGE_STATUS=2) T
+		SET T.MILEAGE1 = T.MILEAGE1 + T.MILEAGE2
+	]]>
+	</update>
 	
 	<!-- 카트 추가 -->
 	<insert id="addToCart" parameterType="cart">

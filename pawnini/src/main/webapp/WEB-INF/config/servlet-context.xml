@@ -28,16 +28,6 @@
 	<!-- <resources location="/WEB-INF/views/images/" mapping="/images/**"></resources>
 	<resources location="/WEB-INF/views/style/" mapping="/style/**"></resources> -->
 	
-	<!-- 회원 정보 유지용 로그인 인터셉터 설정 -->
-	<beans:bean id="LoginInterceptor" class="com.pawnini.interceptors.LoginInterceptor"></beans:bean>
-	
-	<interceptors>
-		<interceptor>
-			<mapping path="/pawnini/*.do" />
-			<beans:ref bean="LoginInterceptor" />
-		</interceptor>
-	</interceptors>
-	
 	<!-- uploadPath -->
 	<beans:bean class="java.lang.String" id="uploadPath">
  		<beans:constructor-arg value="C:\sts-bundle\stswk\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\pawnini\resources\" />

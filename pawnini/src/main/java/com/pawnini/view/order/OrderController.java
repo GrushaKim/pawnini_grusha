@@ -175,6 +175,21 @@ public class OrderController {
 		return "order/getOrderDetails";
 	}
 	
+	@RequestMapping(value="deleteOrder.do", method=RequestMethod.POST)
+	public String deleteOrder(OrderDTO dto, ProductDTO product, HttpSession session) throws Exception{
+		
+		//적립금 환불
+		orderService.refundMileage(dto);
+		System.out.println("Controller - refundMileage");
+		//주문 취소
+		orderService.deleteOrder(dto);
+		System.out.println("Controller - deleteOrder");
+		
+		//추후 수정?
+		return "redirect:main.do";
+		
+	}
+	
 	// 장바구니 
 	// 아이템 추가
 	@ResponseBody
@@ -201,7 +216,7 @@ public class OrderController {
 		}
 		}
 		
-		return "redirect:/getCartList.do";
+		return "redirect:getCartList.do";
 		
 	}
 	

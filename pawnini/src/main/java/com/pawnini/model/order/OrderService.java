@@ -35,7 +35,13 @@ public interface OrderService {
 	
 	//배송 제품 재고 차감 
 	public void updateStock(ProductDTO dto) throws Exception;
-
+	
+	//주문 삭제
+	public void deleteOrder(OrderDTO dto) throws Exception;
+	
+	//주문 취소 적립금 환불
+	public void refundMileage(OrderDTO dto) throws Exception;
+		
 	//장바구니 제품 추가
 	public void addToCart(CartDTO dto) throws Exception;
 	

@@ -78,6 +78,18 @@ public class OrderServicempl implements OrderService {
 	}
 	
 	@Override
+	public void refundMileage(OrderDTO dto) throws Exception {
+		System.out.println("주문 취소 - 적립금 환불");
+		dao.refundMileage(dto);
+	}
+	
+	@Override
+	public void deleteOrder(OrderDTO dto) throws Exception {
+		System.out.println("주문 삭제");
+		dao.deleteOrder(dto);
+	}
+
+	@Override
 	public void addToCart(CartDTO dto) throws Exception {
 		System.out.println("장바구니 추가");
 		dao.addToCart(dto);
@@ -124,7 +136,6 @@ public class OrderServicempl implements OrderService {
 		System.out.println("장바구니 금액 합계");
 		return dao.getSum(member_id);
 	}
-
 
 }
 
