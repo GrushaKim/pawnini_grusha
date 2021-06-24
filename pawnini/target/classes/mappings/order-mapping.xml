@@ -27,8 +27,26 @@
 	]]>
 	</insert>
 	
+	<!-- 회원 적립금 잔액 업데이트 -->
+	<update id="updateMileage">
+	<![CDATA[
+		UPDATE MEMBER M
+        SET M.MEMBER_MILEAGE = M.MEMBER_MILEAGE - (SELECT O.ORD_USED_MILEAGE FROM ORD O WHERE O.MEMBER_ID = M.MEMBER_ID AND O.MILEAGE_STATUS=1)
+		WHERE M.MEMBER_ID = #{member_id}
+	]]>
+	</update>
+	
+	<!-- 주문의 적립금 상태 업데이트 (결제 완료 시) 1=회원정보 업데이트 전 2=회원정보 업데이트 후  -->
+	<update id="checkMileageStatus">
+	<![CDATA[
+		UPDATE ORD
+		SET MILEAGE_STATUS=2
+		WHERE ORD_ID = #{ord_id} AND MEMBER_ID = #{member_id}
+	]]>
+	</update>
+
 	<!-- 상세 주문 삽입 -->
-	<insert id="insertOrderDetails" parameterType="orderDetails">
+	<insert id="insertOrderDetails">
 	<![CDATA[
 		 INSERT INTO ORD_DETAILS (ORD_D_ID, ORD_ID, PRODUCT_ID, CART_AMOUNT)
                 SELECT ORD_D_SEQ.NEXTVAL, #{ord_id}, PRODUCT_ID, CART_AMOUNT
@@ -38,15 +56,16 @@
 	
 	<!-- 특정 회원의 주문 목록 -->
 	<select id="getOrderList" resultType="order">
-			SELECT *
-			FROM ORD
-			WHERE MEMBER_ID = #{member_id}
+		SELECT *
+		FROM ORD
+		WHERE MEMBER_ID = #{member_id}
 	</select>
 	
 	<!-- 상세 주문 보기 -->
 	<select id="getOrderDetails" resultType="orderList">
-		SELECT O.ORD_ID, O.MEMBER_ID, O.RECIPIENT_NAME, O.ORD_EMAIL, O.ORD_POSTCODE, O.ORD_F_ADDR, O.ORD_S_ADDR, O.ORD_PHONE, O.ORD_DATE, O.ORD_TOTAL,
-                D.ORD_D_ID, D.PRODUCT_ID, D.CART_AMOUNT,
+		SELECT O.ORD_ID, O.MEMBER_ID, O.RECIPIENT_NAME, O.ORD_POSTCODE, O.ORD_F_ADDR, O.ORD_S_ADDR, O.ORD_REQ_MSG,
+				O.ORD_PHONE, O.ORD_DATE, O.ORD_TOTAL, O.ORD_STATUS, O.ORD_CARD_INFO1, O.ORD_USED_MILEAGE,
+                D.ORD_D_ID, D.PRODUCT_ID, D.CART_AMOUNT, 
                 P.PRODUCT_NAME, P.PRODUCT_THUMB_IMG, P.PRODUCT_PRICE
 		FROM ORD O
             INNER JOIN ORD_DETAILS D ON O.ORD_ID = D.ORD_ID
@@ -56,18 +75,45 @@
 	
 	<!-- 관리자:전체 주문 불러오기 -->
 	<select id="getAllOrders" resultType="order">
-		SELECT * FROM ORD
+		SELECT DISTINCT O.ORD_ID, O.ORD_DATE, O.ORD_TOTAL, O.ORD_STATUS
+		FROM ORD O INNER JOIN ORD_DETAILS D ON O.ORD_ID = D.ORD_ID
 	</select>
 	
-	<!-- 관리자:특정 주문 불러오기 -->
-	<select id="getOrder" resultType="orderList">
-		SELECT O.ORD_ID, O.MEMBER_ID, O.RECIPIENT_NAME, O.ORD_EMAIL, O.ORD_POSTCODE, O.ORD_F_ADDR, O.ORD_S_ADDR, O.ORD_PHONE, O.ORD_DATE, O.ORD_TOTAL,
-	                D.ORD_D_ID, D.PRODUCT_ID, D.CART_AMOUNT,
-	                P.PRODUCT_NAME, P.PRODUCT_THUMB_IMG, P.PRODUCT_PRICE
-	    FROM ORD O
-	                INNER JOIN ORD_DETAILS D ON O.ORD_ID = D.ORD_ID
-	                INNER JOIN PRODUCT P ON D.PRODUCT_ID = P.PRODUCT_ID
-	    WHERE O.ORD_ID = #{ord_id}
+	<!-- 관리자:상세 주문 불러오기 -->
+	<select id="getAllOrderDetails" resultType="orderList">
+		SELECT O.ORD_ID, O.MEMBER_ID, O.RECIPIENT_NAME, O.ORD_POSTCODE, O.ORD_F_ADDR, O.ORD_S_ADDR, O.ORD_REQ_MSG,
+				O.ORD_PHONE, O.ORD_DATE, O.ORD_TOTAL, O.ORD_STATUS, O.ORD_CARD_INFO1, O.ORD_USED_MILEAGE,
+                D.ORD_D_ID, D.PRODUCT_ID, D.CART_AMOUNT, 
+                P.PRODUCT_NAME, P.PRODUCT_THUMB_IMG, P.PRODUCT_PRICE
+		FROM ORD O
+            INNER JOIN ORD_DETAILS D ON O.ORD_ID = D.ORD_ID
+            INNER JOIN PRODUCT P ON P.PRODUCT_ID = D.PRODUCT_ID
+		WHERE O.ORD_ID = #{ord_id}
+	</select>
+	
+	<!-- 관리자: 상세 주문 배송현황 업데이트 -->
+	<update id="updateOrdStatus">
+	<![CDATA[
+		UPDATE ORD
+		   SET ORD_STATUS = #{ord_status}
+		WHERE ORD_ID = #{ord_id}
+	]]>
+	</update>
+	
+	<!-- 관리자/상품: 배송현황 업데이트(배송 중 이후) 시 해당 상품 재고 차감  -->
+	<update id="updateStock">
+	<![CDATA[
+		UPDATE PRODUCT
+		   SET PRODUCT_STOCK = PRODUCT_STOCK - #{product_stock}
+		 WHERE PRODUCT_ID = #{product_id}
+	]]>
+	</update>
+	
+	<!-- 상기 보조 테이블 -->
+	<select id="updateStockSub" resultType="orderDetails">
+		SELECT ORD_ID, PRODUCT_ID, CART_AMOUNT
+		  FROM ORD_DETAILS
+		 WHERE ORD_ID = #{ord_id}
 	</select>
 	
 	<!-- 카트 추가 -->

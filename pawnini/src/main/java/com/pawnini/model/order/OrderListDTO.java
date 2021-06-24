@@ -14,6 +14,11 @@ public class OrderListDTO {
 	private String ord_phone;
 	private Date ord_date;
 	private int ord_total;
+	private String ord_status;
+	private String ord_card_info1;
+	private int ord_used_mileage;
+	private String ord_req_msg;
+	private int cart_total;
 	
 	//Ord_details table
 	private int ord_d_id;
@@ -120,14 +125,47 @@ public class OrderListDTO {
 	public void setOrd_email(String ord_email) {
 		this.ord_email = ord_email;
 	}
+	public String getOrd_status() {
+		return ord_status;
+	}
+	public void setOrd_status(String ord_status) {
+		this.ord_status = ord_status;
+	}
+	public String getOrd_card_info1() {
+		return ord_card_info1;
+	}
+	public void setOrd_card_info1(String ord_card_info1) {
+		this.ord_card_info1 = ord_card_info1;
+	}
+	public int getOrd_used_mileage() {
+		return ord_used_mileage;
+	}
+	public void setOrd_used_mileage(int ord_used_mileage) {
+		this.ord_used_mileage = ord_used_mileage;
+	}
+	public String getOrd_req_msg() {
+		return ord_req_msg;
+	}
+	public void setOrd_req_msg(String ord_req_msg) {
+		this.ord_req_msg = ord_req_msg;
+	}
+	public int getCart_total() {
+		return cart_total;
+	}
+	public void setCart_total(int cart_total) {
+		this.cart_total = cart_total;
+	}
 	@Override
 	public String toString() {
 		return "OrderListDTO [ord_id=" + ord_id + ", member_id=" + member_id + ", recipient_name=" + recipient_name
 				+ ", ord_postcode=" + ord_postcode + ", ord_f_addr=" + ord_f_addr + ", ord_s_addr=" + ord_s_addr
 				+ ", ord_email=" + ord_email + ", ord_phone=" + ord_phone + ", ord_date=" + ord_date + ", ord_total="
-				+ ord_total + ", ord_d_id=" + ord_d_id + ", product_id=" + product_id + ", cart_amount=" + cart_amount
+				+ ord_total + ", ord_status=" + ord_status + ", ord_card_info1=" + ord_card_info1
+				+ ", ord_used_mileage=" + ord_used_mileage + ", ord_req_msg=" + ord_req_msg + ", cart_total="
+				+ cart_total + ", ord_d_id=" + ord_d_id + ", product_id=" + product_id + ", cart_amount=" + cart_amount
 				+ ", product_name=" + product_name + ", product_thumb_img=" + product_thumb_img + ", product_price="
 				+ product_price + "]";
 	}
+	
 	
 }

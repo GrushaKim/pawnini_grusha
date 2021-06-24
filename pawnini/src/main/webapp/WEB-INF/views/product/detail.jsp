@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="../style/detail.css" />
 <link rel="stylesheet" href="../style/main.css" />
 <script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
 function addToCart(){
 	var product_id = $("#product_id").val();		
@@ -22,11 +23,24 @@ function addToCart(){
 		type : "post",
 		data : data,
 		success : function(){
-			alert("장바구니에 추가되었습니다.");
-			$("#cart_amount").val("1");
+			swal({
+				icon: "success",
+				text: "장바구니로 이동하시겠습니까?",
+				buttons: ["예", "아니오"],
+			}).then(function(isConfirm){
+				if(isConfirm){
+					window.location.reload();
+				}else{
+					window.location.href = "getCartList.do";
+					$("#cart_amount").val("1");
+				}
+			});
+			
 		},
 		error : function(){
-			alert("로그인 후 이용해 주시기 바랍니다.");
+			swal("", "로그인 후 이용해 주시기 바랍니다.", "warning").then(function(){
+				window.location.href = "login.do";
+			});
 		},
 	})
 }

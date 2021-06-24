@@ -10,6 +10,7 @@ import com.pawnini.model.order.OrderDTO;
 import com.pawnini.model.order.OrderDetailsDTO;
 import com.pawnini.model.order.OrderListDTO;
 import com.pawnini.model.order.OrderService;
+import com.pawnini.model.product.ProductDTO;
 
 @Service("orderService")
 public class OrderServicempl implements OrderService {
@@ -21,13 +22,37 @@ public class OrderServicempl implements OrderService {
 		System.out.println("주문서 삽입");
 		dao.insertOrder(dto);
 	}
+	
+	@Override
+	public void updateMileage(String member_id) throws Exception {
+		System.out.println("member 적립금 업데이트");
+		dao.updateMileage(member_id);
+	}
 
+	@Override
+	public void checkMileageStatus(OrderDTO dto) throws Exception {
+		System.out.println("order 적립금 처리현황 업데이트");
+		dao.checkMileageStatus(dto);
+	}
+	
 	@Override
 	public void insertOrderDetails(OrderDetailsDTO dtoList) throws Exception {
 		System.out.println("상세주문서 삽입");
 		dao.insertOrderDetails(dtoList);
 	}
 	
+	@Override
+	public List<OrderDTO> getAllOrders() throws Exception {
+		System.out.println("전체 주문 목록 불러오기 - 관리자");
+		return dao.getAllOrders();
+	}
+	
+	@Override
+	public List<OrderListDTO> getAllOrderDetails(String ord_id) throws Exception {
+		System.out.println("특정 상세 주문 불러오기 - 관리자");
+		return dao.getAllOrderDetails(ord_id);
+	}
+
 	@Override
 	public List<OrderDTO> getOrderList(OrderDTO dto) throws Exception{
 		System.out.println("주문 목록 불러오기");
@@ -40,6 +65,18 @@ public class OrderServicempl implements OrderService {
 		return dao.getOrderDetails(dto);
 	}
 
+	@Override
+	public void updateOrdStatus(OrderDTO dto) throws Exception {
+		System.out.println("배송현황 업데이트");
+		dao.updateOrdStatus(dto);
+	}
+	
+	@Override
+	public void updateStock(ProductDTO dto) throws Exception {
+		System.out.println("상품 재고 업데이트");
+		dao.updateStock(dto);
+	}
+	
 	@Override
 	public void addToCart(CartDTO dto) throws Exception {
 		System.out.println("장바구니 추가");
@@ -87,6 +124,7 @@ public class OrderServicempl implements OrderService {
 		System.out.println("장바구니 금액 합계");
 		return dao.getSum(member_id);
 	}
+
 
 }
 

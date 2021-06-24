@@ -25,10 +25,10 @@ public class MainController {
 	}
 	
 	/********************************** 헤더 경로지정 컨트롤러 ************************************/
-/*	@RequestMapping("/login.do")
+	@RequestMapping("/login.do")
 	public String login() {
 		return "Login";
-	}*/
+	}
 	@RequestMapping("/signUp.do")
 	public String signUp() {
 		return "signUp";

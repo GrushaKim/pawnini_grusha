@@ -12,6 +12,7 @@ import com.pawnini.model.order.CartDTO;
 import com.pawnini.model.order.OrderDTO;
 import com.pawnini.model.order.OrderDetailsDTO;
 import com.pawnini.model.order.OrderListDTO;
+import com.pawnini.model.product.ProductDTO;
 
 @Repository
 public class OrderDAO {
@@ -25,10 +26,35 @@ public class OrderDAO {
 		mybatis.insert("OrderDAO.insertOrder", dto);
 	}
 	
+	//회원정보 적립금 업데이트
+	public void updateMileage(String member_id) throws Exception{
+		System.out.println("Mybatis/updateMileage() 기능처리 시작");
+		mybatis.update("OrderDAO.updateMileage", member_id);
+	}
+	
+	//주문 테이블 내 적립금 상태 업데이트
+	public void checkMileageStatus(OrderDTO dto) throws Exception{
+		System.out.println("Mybatis/checkMileageStatus() 기능처리 시작");
+		mybatis.update("OrderDAO.checkMileageStatus", dto);
+	}
+	
 	//상세주문 정보 삽입
 	public void insertOrderDetails(OrderDetailsDTO dtoList) throws Exception{
 		System.out.println("Mybatis/insertOrderDetails() 기능처리 시작");
+		System.out.println(dtoList.toString());
 		mybatis.insert("OrderDAO.insertOrderDetails", dtoList);
+	}
+	
+	//전체 주문목록 불러오기(관리자)
+	public List<OrderDTO> getAllOrders() throws Exception{
+		System.out.println("Mybatis/getAllOrders() 기능처리 시작");
+		return mybatis.selectList("OrderDAO.getAllOrders");
+	}
+	
+	//특정 ID 상세주문 불러오기(관리자)
+	public List<OrderListDTO> getAllOrderDetails(String ord_id) throws Exception{
+		System.out.println("Mybatis/getAllOrderDetails() 기능처리 시작");
+		return mybatis.selectList("OrderDAO.getAllOrderDetails", ord_id);
 	}
 	
 	//특정 ID 주문 정보 불러오기
@@ -41,6 +67,18 @@ public class OrderDAO {
 	public List<OrderListDTO> getOrderDetails(OrderDTO dto) throws Exception{
 		System.out.println("Mybatis/getOrderDetails() 기능처리 시작");
 		return mybatis.selectList("OrderDAO.getOrderDetails", dto);
+	}
+	
+	//배송현황 업데이트
+	public void updateOrdStatus(OrderDTO dto) throws Exception{
+		System.out.println("Mybatis/updateOrdStatus() 기능처리 시작");
+		mybatis.update("OrderDAO.updateOrdStatus", dto);
+	}
+	
+	//배송 제품 재고 차감 
+	public void updateStock(ProductDTO dto) throws Exception{
+		System.out.println("Mybatis/updateStock() 기능처리 시작");
+		mybatis.update("OrderDAO.updateStock", dto);
 	}
 	
 	//장바구니 제품 추가

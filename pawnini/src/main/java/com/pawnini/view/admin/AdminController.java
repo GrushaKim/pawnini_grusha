@@ -20,17 +20,7 @@ public class AdminController {
 	
 	@Autowired
 	AdminService adminService;
-	
-	@RequestMapping(value="getAllOrders.do", method=RequestMethod.GET)
-	public String getAllOrders(Model model) throws Exception {
-		
-		List<OrderDTO> allOrders = adminService.getAllOrders();
-		
-		model.addAttribute("allOrders", allOrders);
-	
-		return "admin/order/getAllOrders";
-	}
-	
+
 	@RequestMapping(value="getOrder.do", method=RequestMethod.GET)
 	public String getOrder(@RequestParam("num") String ord_id, OrderDTO dto, Model model) throws Exception {
 		

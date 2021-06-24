@@ -8,30 +8,32 @@
 <title>Insert title here</title>
 <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 <style>
- section#content ul li { border:5px solid #eee; padding:10px 20px; margin-bottom:20px; }
- section#content .orderList span { font-size:20px; font-weight:bold; display:inline-block; width:90px; margin-right:10px; }
+ section#content ul li { ballOrder:5px solid #eee; padding:10px 20px; margin-bottom:20px; }
+ section#content .allOrder span { font-size:20px; font-weight:bold; display:inline-block; width:90px; margin-right:10px; }
 </style>
-
+<script>
+</script>
 </head>
  <%@ include file="../include/Header.jsp" %> 
 <body>
 
 <a href="main.do">메인으로 가기</a>
 <br><br><br>
-This is an order list !!!!!
+
 <br><br><br>
 
 <section id="content">
- 
- <ul class="orderList">
-  <c:forEach items="${orderList}" var="orderList">
+
+ <ul class="allOrder">
+  <c:forEach items="${allOrder}" var="allOrder">
   <li>
   <div>
-   <p><span>주문번호</span><a href="/getOrderDetails.do?num=${orderList.ord_id}">${orderList.ord_id}</a></p>
-   <p><span>주문일자</span>${orderList.ord_date}</p>
-   <p><span>결제금액</span><fmt:formatNumber pattern="###,###,###" value="${orderList.ord_total}" />&nbsp;원</p>
-   <p><span>주문현황</span>${orderList.ord_status}</p>
-   
+   <p><span>주문번호</span> <a href="getAllOrderDetails.do?num=${allOrder.ord_id}">${allOrder.ord_id}</a></p>
+   <p><span>주문일자</span>${allOrder.ord_date}</p>
+   <p><span>주문현황</span>${allOrder.ord_status}</p>
+   <p ><span>결제금액</span><fmt:formatNumber pattern="###,###,###" value="${allOrder.ord_total}" />&nbsp;원</p>
+   <script>
+   </script>
   </div>
   </li>
   </c:forEach>

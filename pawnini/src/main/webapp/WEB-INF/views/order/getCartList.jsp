@@ -84,7 +84,7 @@ function deleteCart(){
 				<td>
 					${row.product_name}
 				<td style="width: 80px" align="right">
-					<fmt:formatNumber pattern="###,###,###" value="${row.product_price}" />
+					<fmt:formatNumber pattern="###,###,###" value="${row.product_price}" />&nbsp;원
 				<td>
 					<input type="number" id="cart_amount" style="width:40px" name="cart_amount" value="${row.cart_amount}" />
 					<button type="submit" id="updateCartBtn">수정</button>
@@ -93,15 +93,15 @@ function deleteCart(){
 					<input type="hidden" id="member_id" name="member_id" value="${member.member_id}" />
 				<td style="width:100px" align="right">
 				<!-- 아이템당 수량 *가격  = cart_total-->
-					<fmt:formatNumber pattern="###,###,###" value="${row.cart_total}" />
+					<fmt:formatNumber pattern="###,###,###" value="${row.cart_total}" />&nbsp;원
 				<td>
 					<button type="button" id="deleteBtn" onclick="deleteCart()">삭제</button>
 			</c:forEach>
 			<tr>
 				<td colspan="6" align="right">
-					상품 주문 금액: <fmt:formatNumber pattern="###,###,###" value="${map.sumTotal}" /><br>
-					배송비: ${map.shippingFee}<br>
-					최종 주문 금액: <fmt:formatNumber pattern="###,###,###" value="${map.finalSum}" />
+					상품 주문 금액: <fmt:formatNumber pattern="###,###,###" value="${map.sumTotal}" />&nbsp;원<br>
+					배송비: <fmt:formatNumber pattern="###,###,###" value="${map.shippingFee}" />&nbsp;원<br>
+					최종 주문 금액: <fmt:formatNumber pattern="###,###,###" value="${map.finalSum}" />&nbsp;원
 		</table>
 					<input type="hidden" name="count" value="${map.count}" />
 	</form>

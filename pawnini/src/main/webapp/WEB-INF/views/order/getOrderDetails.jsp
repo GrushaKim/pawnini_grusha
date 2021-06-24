@@ -34,16 +34,27 @@ OrderDetails
   <c:forEach items="${orderDetails}" var="orderDetails" varStatus="status">
    
    <c:if test="${status.first}">
-    <p><span>주문일</span>${orderDetails.ord_date}</p>
-    <p><span>수령인</span>${orderDetails.recipient_name}</p>
+    <p><span>주문번호</span>${orderDetails.ord_date}</p>
+    <p><span>주문일자</span>${orderDetails.ord_date}</p>
+    <p><span>주문현황</span>${orderDetails.ord_status}</p>
+    <hr>
+    <p><span>결제수단</span>카드결제&nbsp;&nbsp;(${orderDetails.ord_card_info1})</p>
+    <p><span>최종결제금액</span>&nbsp; <fmt:formatNumber pattern="###,###,###" value="${orderDetails.ord_total}" />&nbsp;원&nbsp;
+    <c:if test="${mileage != 0}">
+    (사용한 적립금: <fmt:formatNumber pattern="#,###" value="${orderDetails.ord_used_mileage}" />&nbsp;원)
+    </c:if>
+		
+
+    <hr>
+    <p><span>수령인명</span>${orderDetails.recipient_name}</p>
+    <p><span>배송지</span>(${orderDetails.ord_postcode}) ${orderDetails.ord_f_addr} ${orderDetails.ord_s_addr}</p>
     <p><span>연락처</span>${orderDetails.ord_phone}</p>
-    <p><span>주소</span>(${orderDetails.ord_postcode}) ${orderDetails.ord_f_addr} ${orderDetails.ord_s_addr}</p>
-   <%--  <p><span>가격</span><fmt:formatNumber pattern="###,###,###" value="${orderDetails.amount}" /> 원</p> --%>
+    <p><span>요청사항</span>${orderDetails.ord_req_msg}</p>
    </c:if>
+   
    
   </c:forEach>
  </div>
- 
  <ul class="orderView">
   <c:forEach items="${orderDetails}" var="orderDetails">     
   <li>
@@ -54,8 +65,8 @@ OrderDetails
     <p>
      <span>상품명</span>${orderDetails.product_name}<br />
      <span>판매가</span><fmt:formatNumber pattern="###,###,###" value="${orderDetails.product_price}" /> 원<br />
-     <span>구입 수량</span>${orderDetails.cart_amount} 개<br />
-     <span>주문금액</span><fmt:formatNumber pattern="###,###,###" value="${orderDetails.product_price * orderDetails.cart_amount}" /> 원                  
+     <span>수량</span>${orderDetails.cart_amount} 개<br />
+     <span>합계</span><fmt:formatNumber pattern="###,###,###" value="${orderDetails.product_price * orderDetails.cart_amount}" /> 원                  
     </p>
    </div>
   </li>     

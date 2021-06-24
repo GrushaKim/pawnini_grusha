@@ -51,7 +51,8 @@
 	        <input class="Header_input" type="text" placeholder="Search..." name="searchKeyword2" />
         </form>
       </div>
-      <h3 class="basket"><a href="getOrderList.do">주문목록</a></h3>
+      <h3 class="basket"><a href="getOrderList.do">주문목록(개인)</a></h3>
+      <h3 class="basket"><a href="getAllOrders.do">주문목록(관리자)</a></h3>
       <h3 class="basket"><a href="basket.do">BASKET</a></h3>
       <a class="basket" href="getCartList.do">
         <i class="fas fa-shopping-cart fa-lg"></i>
