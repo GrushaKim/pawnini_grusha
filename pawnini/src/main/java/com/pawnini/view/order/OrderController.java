@@ -151,15 +151,15 @@ public class OrderController {
 	public String getOrderList(HttpSession session, OrderDTO dto, Model model) throws Exception {
 		MemberDTO member = (MemberDTO)session.getAttribute("member");
 		String member_id = member.getMember_id();
+		dto.setMember_id(member_id);
 		
 		// 주문 목록 불러오기 
-		dto.setMember_id(member_id);
 		List<OrderDTO> orderList = orderService.getOrderList(dto);
 		model.addAttribute("orderList", orderList);
-		
+
 		return "order/getOrderList";
-		
 	}
+	
 	
 	@RequestMapping(value="getOrderDetails.do", method=RequestMethod.GET)
 	public String getOrderDetails(HttpSession session, @RequestParam("num") String ord_id, OrderDTO dto, Model model) throws Exception {

@@ -29,7 +29,7 @@ public interface OrderService {
 	
 	//상세주문 보기
 	public List<OrderListDTO> getOrderDetails(OrderDTO dto) throws Exception;
-	
+		
 	//배송현황 업데이트
 	public void updateOrdStatus(OrderDTO dto) throws Exception;
 	

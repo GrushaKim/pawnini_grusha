@@ -29,6 +29,11 @@ public class OrderListDTO {
 	private String product_name;
 	private String product_thumb_img;
 	private int product_price;
+	
+	//etc
+	private String fav_item_name;
+	private int fav_item_qty;
+	
 	public String getOrd_id() {
 		return ord_id;
 	}
@@ -155,6 +160,18 @@ public class OrderListDTO {
 	public void setCart_total(int cart_total) {
 		this.cart_total = cart_total;
 	}
+	public String getFav_item_name() {
+		return fav_item_name;
+	}
+	public void setFav_item_name(String fav_item_name) {
+		this.fav_item_name = fav_item_name;
+	}
+	public int getFav_item_qty() {
+		return fav_item_qty;
+	}
+	public void setFav_item_qty(int fav_item_qty) {
+		this.fav_item_qty = fav_item_qty;
+	}
 	@Override
 	public String toString() {
 		return "OrderListDTO [ord_id=" + ord_id + ", member_id=" + member_id + ", recipient_name=" + recipient_name
@@ -164,8 +181,9 @@ public class OrderListDTO {
 				+ ", ord_used_mileage=" + ord_used_mileage + ", ord_req_msg=" + ord_req_msg + ", cart_total="
 				+ cart_total + ", ord_d_id=" + ord_d_id + ", product_id=" + product_id + ", cart_amount=" + cart_amount
 				+ ", product_name=" + product_name + ", product_thumb_img=" + product_thumb_img + ", product_price="
-				+ product_price + "]";
+				+ product_price + ", fav_item_name=" + fav_item_name + ", fav_item_qty=" + fav_item_qty + "]";
 	}
+	
 	
 	
 }

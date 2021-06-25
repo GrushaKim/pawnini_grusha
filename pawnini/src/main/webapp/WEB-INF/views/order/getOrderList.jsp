@@ -29,7 +29,7 @@ section#content .orderList span {
 <body>
 
 	<section id="content">
-
+	<hr>
 		<ul class="orderList">
 			<c:forEach items="${orderList}" var="orderList">
 				<li>

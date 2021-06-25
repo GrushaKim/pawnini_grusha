@@ -64,7 +64,7 @@ public class OrderServicempl implements OrderService {
 		System.out.println("상세주문 불러오기");
 		return dao.getOrderDetails(dto);
 	}
-
+	
 	@Override
 	public void updateOrdStatus(OrderDTO dto) throws Exception {
 		System.out.println("배송현황 업데이트");
@@ -137,6 +137,7 @@ public class OrderServicempl implements OrderService {
 		return dao.getSum(member_id);
 	}
 
+	
 }
 
 
